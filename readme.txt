@@ -1,0 +1,10 @@
+SETUP
+npm install react
+npm install react-dom
+npm install redux
+npm install react-redux
+npm install --save-dev webpack
+npm install --save-dev webpack-dev-server
+npm install express
+npm install socket.io
+npm install socket.io.js
