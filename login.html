@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Gibblabber Authentication</title>
+  <link rel="stylesheet" type="text/css" href="css/chat.css">
+</head>
+<script>
+function login(){
+  var noVal=document.getElementById('login_id').value;
+  var json={};
+  json.value=noVal;
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    var resultSet=JSON.parse(this.responseText);
+    if(JSON.parse(resultSet.status)){
+      location.href='http://localhost:8080/chat';
+    }
+  }
+
+  };
+
+  //xhttp.open("POST","http://localhost:4000/empdetails", true);
+  xhttp.open("POST","http://localhost:8080/authenticate ", true);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send(JSON.stringify(json));
+  }
+
+</script>
+<body>
+  <div>
+    <input type='text' id="login_id"></input>
+    <button type="button" onclick="login()">LOGIN</button>
+  </div>
+</body>
+</html>
