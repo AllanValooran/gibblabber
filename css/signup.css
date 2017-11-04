@@ -6,10 +6,25 @@
 .username, .email, .gender ,.password, .cfmpassword{
   margin-bottom:2%;
 }
-.username_span , .email_span, .gender_span , .password_span , .cfmpassword{
+.username_span , .email_span, .gender_span , .password_span , .cfmpassword_span{
   font-weight:bold;
   margin-right:2%;
 }
 .login_button{
   margin-left:10%;
+}
+.username_span{
+  margin-right:5%;
+}
+.email_span{
+  margin-right:75px;
+}
+.gender_span{
+  margin-right:8%;
+}
+.password_span{
+  margin-right:65px;
+}
+.cfmpassword_span{
+  margin-right:8px;
 }

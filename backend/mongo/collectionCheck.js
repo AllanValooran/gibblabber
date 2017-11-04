@@ -1,0 +1,1 @@
+const collectionCheck=function(collectionName)

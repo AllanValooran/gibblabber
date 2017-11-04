@@ -4,6 +4,7 @@ const app=express();
 const server=http.createServer(app);
 const bodyParser=require('body-parser');
 const cookieParser=require('cookie-parser');
+const createUser=require('./backend/createUser.js');
 
 server.listen(8080, "127.0.0.1",()=>{
   console.log('listening 8080');
@@ -25,10 +26,19 @@ app.use(express.static(__dirname));
 
 app.get('/login',(req,res)=>{
   res.sendFile(__dirname + '/login.html');
-})
+});
+
 app.get('/signup',(req,res)=>{
   res.sendFile(__dirname + '/signup.html');
-})
+});
+
+app.post('/createuser',(req,res)=>{
+  console.log(createUser);
+  createUser(req,function(responseData){
+    res.send(responseData);
+  })
+});
+
 app.post('/authenticate',(req,res)=>{
   var cookie = req.cookies.token;
   var login=req.body.value;

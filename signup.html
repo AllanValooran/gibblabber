@@ -7,23 +7,36 @@
 	<link rel="stylesheet" type="text/css" href="css/signup.css">
 </head>
 <script>
-function login(){
-  var noVal=document.getElementById('login_id').value;
-  var json={};
-  json.value=noVal;
+function joinGibblabber(){
+	var username=document.getElementById('username').value;
+	var email=document.getElementById('email').value;
+	var gender=document.getElementById('gender').value;
+	var password=document.getElementById('password').value;
+	var confirmPassword=document.getElementById('cfmpassword').value;
+	if(username==='' || email==='' || gender==='' || password==='' || confirmPassword===''){
+		alert('Please fill the fields');
+		return;
+	}
+	if(password!==confirmPassword){
+		alert('Passwords are not matching');
+		return;
+	}
+	var json={};
+  json.username=username;
+	json.email=email;
+	json.gender=gender;
+	json.password=window.btoa(password);
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
     var resultSet=JSON.parse(this.responseText);
     if(JSON.parse(resultSet.status)){
-      location.href='http://localhost:8080/chat';
+      console.log('creating User');
     }
   }
 
   };
-
-  //xhttp.open("POST","http://localhost:4000/empdetails", true);
-  xhttp.open("POST","http://localhost:8080/authenticate ", true);
+  xhttp.open("POST","http://localhost:8080/createuser ", true);
   xhttp.setRequestHeader("Content-type", "application/json");
   xhttp.send(JSON.stringify(json));
   }
@@ -35,21 +48,21 @@ function login(){
     	<span class="username_span">
 				Username
 			</span>
-			<input type='text' id="username_input">
+			<input type='text' id="username">
 			</input>
 		</div>
 		<div class="col-md-12 email">
     	<span class="email_span">
 				Email Id
 			</span>
-			<input type='text' id="email_input">
+			<input type='text' id="email">
 			</input>
 		</div>
 		<div class="col-md-12 gender">
     	<span class="gender_span">
 				Gender
 			</span>
-			<select>
+			<select id="gender">
   			<option value="male">Male</option>
   			<option value="female">Female</option>
 				<option value="others">Others</option>
@@ -61,7 +74,7 @@ function login(){
     	<span class="password_span">
 				Password
 			</span>
-			<input type='password' id="password_input">
+			<input type='password' id="password">
 			</input>
 		</div>
 
@@ -69,11 +82,11 @@ function login(){
     	<span class="cfmpassword_span">
 				Confirm Password
 			</span>
-			<input type='password' id="cfmpassword_input">
+			<input type='password' id="cfmpassword">
 			</input>
 		</div>
 		<div class="col-md-12 login_button">
-			<button type="button" onclick="login()">LOGIN</button>
+			<button type="button" onclick="joinGibblabber()">Join Gibblabber</button>
 		</div>
   </div>
 </body>
