@@ -1,4 +1,5 @@
 const mongoConnection=require('./mongo/mongoConnector.js');
+const collectionExistCheck=require('./mongo/collectionExistCheck.js');
 const gibber=require('./scrambler/gibber.js');
 const hash=require('./scrambler/hash.js');
 
@@ -9,10 +10,10 @@ const createUser=function(req,callback){
   const dbConnectionUrl='mongodb://'+db_ipAddress+':'+port_no+'/'+db_name;
   mongoConnection.createConnection(dbConnectionUrl,function(err,dbInstance){
   	if(err){
-      db.close();
       let json={};
       json.status=false;
-      json.data='Server Down';
+      json.data='Service Error';
+      json.errorCode=0;
       json.dataType='string';
       callback(json);
       return;
@@ -26,40 +27,30 @@ const createUser=function(req,callback){
 }
 
 const setUserInfo=function(resultSet,dbInstance,callback){
-  let collectionName='hell0o'
-  dbInstance.listCollections().toArray(function(err, collInfos) {
-      // collInfos is an array of collection info objects that look like:
-      // { name: 'test', options: {} }
-      console.log(collInfos);
+  let collectionName='macin'
+    collectionExistCheck(dbInstance ,collectionName,true,function(output){
+    if(!output.status){
+      if(output.data.indexOf('err')==-1){
+      dbInstance.close();
+      }
+      let json={};
+      json.status=false;
+      json.data='Service Error';
+      json.errorCode=output.errorCode;
+      json.dataType='string';
+      callback(json);
+      return;
+    }
+    else{
+      dbInstance.close();
+      let json={};
+      json.status=true;
+      json.data=output.data;
+      json.dataType='string';
+      callback(json);
+      return;
+    }
   });
-  /*
-  .find(,function(err,collection){
-
-		collection.toArray(function(err,results){
-
-			if(results==undefined || results.length==0)
-			{
-				db.close();
-				if(workFlow.length==0)
-				{
-					json.status=false;
-				}
-				else
-				{
-					json.status=true;
-				}
-				json.workflow=workFlow;
-				callback(json);
-
-			}
-			else
-			{
-				workFlow.push(results[0]["EMP_NAME"]);
-				emp_id=results[0]["MGR_ID"];
-				getWorkFlow(db,collectionName,emp_id,callback,workFlow);
-			}
-		});
-    */
 }
 
 
