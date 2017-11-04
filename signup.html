@@ -2,9 +2,9 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Gibblabber Authentication</title>
+	<title>We welcome you</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" href="css/login.css">
+	<link rel="stylesheet" type="text/css" href="css/signup.css">
 </head>
 <script>
 function login(){
@@ -38,15 +38,39 @@ function login(){
 			<input type='text' id="username_input">
 			</input>
 		</div>
+		<div class="col-md-12 email">
+    	<span class="email_span">
+				Email Id
+			</span>
+			<input type='text' id="email_input">
+			</input>
+		</div>
+		<div class="col-md-12 gender">
+    	<span class="gender_span">
+				Gender
+			</span>
+			<select>
+  			<option value="male">Male</option>
+  			<option value="female">Female</option>
+				<option value="others">Others</option>
+				<option value="notreveal">Wish not to answer</option>
+			</select>
+		</div>
+
 		<div class="col-md-12 password">
     	<span class="password_span">
 				Password
 			</span>
-			<input type='text' id="password_input">
+			<input type='password' id="password_input">
 			</input>
 		</div>
-		<div class="col-md-12 sign_up">
-			<a href="/signup">New to gibblabber ? Click to Signup</a>
+
+		<div class="col-md-12 cfmpassword">
+    	<span class="cfmpassword_span">
+				Confirm Password
+			</span>
+			<input type='password' id="cfmpassword_input">
+			</input>
 		</div>
 		<div class="col-md-12 login_button">
 			<button type="button" onclick="login()">LOGIN</button>
