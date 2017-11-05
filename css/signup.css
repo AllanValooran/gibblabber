@@ -1,12 +1,12 @@
 
 .login{
-  margin: 20%;
+  margin: 10%;
   margin-left: 35%;
 }
-.username, .email, .gender ,.password, .cfmpassword{
+.username, .firstname, .lastname, .email, .gender ,.password, .mobileno, .country, .cfmpassword{
   margin-bottom:2%;
 }
-.username_span , .email_span, .gender_span , .password_span , .cfmpassword_span{
+.username_span , .firstname_span, .lastname_span, .email_span, .gender_span , .mobileno_span, .country_span, .password_span , .cfmpassword_span{
   font-weight:bold;
   margin-right:2%;
 }
@@ -19,12 +19,27 @@
 .email_span{
   margin-right:75px;
 }
+.firstname_span{
+  margin-right:57px;
+}
+.lastname_span{
+  margin-right:57px;
+}
+.mobileno_span{
+  margin-right:57px;
+}
 .gender_span{
-  margin-right:8%;
+  margin-right:80px;
+}
+.country_span{
+  margin-right:57px;
 }
 .password_span{
-  margin-right:65px;
+  margin-right:63px;
 }
 .cfmpassword_span{
-  margin-right:8px;
+  margin-right:6px;
+}
+#gender,#country{
+  width:14%
 }

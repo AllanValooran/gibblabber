@@ -9,6 +9,7 @@ const collectionExistCheck=function(dbInstance,collectionName,createIt,callback)
         jsonIntermediate.data='collectionExistCheck err';
         jsonIntermediate.errorCode=1;
         callback(jsonIntermediate);
+        return;
       }
       else{
         collInfos.map((obj,ind)=>{
@@ -22,6 +23,7 @@ const collectionExistCheck=function(dbInstance,collectionName,createIt,callback)
           jsonIntermediate.data='collectionExistCheck no collection exists';
           jsonIntermediate.errorCode=2;
           callback(jsonIntermediate);
+          return;
         }
         else if(count===0 && createIt===true){
           createCollection(dbInstance,collectionName,function(output){
@@ -31,6 +33,7 @@ const collectionExistCheck=function(dbInstance,collectionName,createIt,callback)
               jsonIntermediate.data=output.data;
               jsonIntermediate.errorCode=output.errorCode;
               callback(jsonIntermediate);
+              return;
             }
             else{
               let jsonIntermediate={};
@@ -38,6 +41,7 @@ const collectionExistCheck=function(dbInstance,collectionName,createIt,callback)
               jsonIntermediate.data=output.data;
               jsonIntermediate.errorCode=output.errorCode;
               callback(jsonIntermediate);
+              return;
             }
           })
         }
@@ -47,12 +51,14 @@ const collectionExistCheck=function(dbInstance,collectionName,createIt,callback)
           jsonIntermediate.data='collectionExistCheck duplicate collection exists';
           jsonIntermediate.errorCode=3;
           callback(jsonIntermediate);
+          return;
         }
         else if(count===1){
           let jsonIntermediate={};
           jsonIntermediate.status=true;
           jsonIntermediate.data='collectionExistCheck collection exists';
           callback(jsonIntermediate);
+          return;
         }
       }
   });

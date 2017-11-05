@@ -5,6 +5,7 @@ const server=http.createServer(app);
 const bodyParser=require('body-parser');
 const cookieParser=require('cookie-parser');
 const createUser=require('./backend/createUser.js');
+const authenticateUser=require('./backend/authenticateUser.js');
 
 server.listen(8080, "127.0.0.1",()=>{
   console.log('listening 8080');
@@ -33,26 +34,28 @@ app.get('/signup',(req,res)=>{
 });
 
 app.post('/createuser',(req,res)=>{
-  console.log(createUser);
   createUser(req,function(responseData){
     res.send(responseData);
   })
 });
 
 app.post('/authenticate',(req,res)=>{
-  var cookie = req.cookies.token;
-  var login=req.body.value;
-   if (cookie === undefined){
-    res.cookie('token',login, { maxAge: 900000, httpOnly: true });
-    console.log('cookie created successfully');
-  }
-  else{
-    // yes, cookie was already present
-    console.log('cookie exists', cookie);
-  }
-  var output={};
-  output.status=true;
-  res.send(JSON.stringify(output));
+  // var cookie = req.cookies.token;
+  // var login=req.body.value;
+  //  if (cookie === undefined){
+  //   res.cookie('token',login, { maxAge: 900000, httpOnly: true });
+  //   console.log('cookie created successfully');
+  // }
+  // else{
+  //   // yes, cookie was already present
+  //   console.log('cookie exists', cookie);
+  // }
+  // var output={};
+  // output.status=true;
+  // res.send(JSON.stringify(output));
+  authenticateUser(req,function(responseData){
+    res.send(responseData);
+  });
 })
 
 app.get('/chat',(req,res)=>{

@@ -1,14 +1,13 @@
 const mongoConnection=require('./mongo/mongoConnector.js');
 const collectionExistCheck=require('./mongo/collectionExistCheck.js');
 const userInfoCollection=require('./mongo/userInfoCollection.js');
-const userCredentialsCollection=require('./mongo/userCredentialsCollection.js');
 const gibber=require('./scrambler/gibber.js');
 const hash=require('./scrambler/hash.js');
 
 
-const createUser=function(req,callback){
+const authenticateUser=function(req,callback){
   let resultSet=Object.assign({},req.body);
-  if(resultSet.username==='' || resultSet.email==='' || resultSet.gender==='' || resultSet.password==='' || resultSet.functionIdentifier===''){
+  if(resultSet.username==='' || resultSet.password===''){
     let json={};
     json.status=false;
     json.data='Error in Request';
@@ -26,7 +25,7 @@ const createUser=function(req,callback){
       let json={};
       json.status=false;
       json.data='Service Error';
-      json.errorCode=0;
+      json.errorCode=9;
       json.dataType='string';
       callback(json);
       return;
@@ -37,20 +36,10 @@ const createUser=function(req,callback){
       setUserInfo(resultSet,dbInstance,function(output){
         if(!output.status){
           callback(output);
-          return;
         }
         else{
-          if(output.data==='Duplicate'){
-            dbInstance.close();
-            callback(output);
-            return;
-          }
-          else{
-            console.log('entering user credentials')
-            setUserCredentials(resultSet,dbInstance,function(output1){
-                callback(output1);
-            })
-          }
+          //setUserCredentials
+          callback(output);
         }
       });
   	}
@@ -87,48 +76,6 @@ const setUserInfo=function(resultSet,dbInstance,callback){
           return;
         }
         else{
-          let json={};
-          json.status=output1.status;
-          json.data=output1.data;
-          json.dataType='string';
-          callback(json);
-          return;
-        }
-      });
-    }
-  });
-}
-
-const setUserCredentials=function(resultSet,dbInstance,callback){
-    let collectionName='macint';
-    collectionExistCheck(dbInstance,collectionName,true,function(output){
-    if(!output.status){
-      if(output.data.indexOf('err')==-1){
-      dbInstance.close();
-      }
-      let json={};
-      json.status=false;
-      json.data='Service Error';
-      json.errorCode=output.errorCode;
-      json.dataType='string';
-      callback(json);
-      return;
-    }
-    else{
-      userCredentialsCollection.insertUserCredentialsCollection(resultSet,dbInstance,collectionName,function(output1){
-        if(!output1.status){
-          if(output1.data.indexOf('err')==-1){
-          dbInstance.close();
-          }
-          let json={};
-          json.status=false;
-          json.data='Service Error';
-          json.errorCode=output.errorCode;
-          json.dataType='string';
-          callback(json);
-          return;
-        }
-        else{
           dbInstance.close();
           let json={};
           json.status=output1.status;
@@ -142,4 +89,6 @@ const setUserCredentials=function(resultSet,dbInstance,callback){
   });
 }
 
-module.exports=createUser;
+
+
+module.exports=authenticateUser;

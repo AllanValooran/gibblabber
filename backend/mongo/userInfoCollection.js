@@ -3,8 +3,12 @@
 const insertUserInfoCollection=function(resultSet,dbInstance,collectionName,callback){
   let userInfoObj={};
   userInfoObj.userName=resultSet.username;
+  userInfoObj.firstName=resultSet.firstname;
+  userInfoObj.lastName=resultSet.lastname;
   userInfoObj.emailId=resultSet.email;
   userInfoObj.gender=resultSet.gender;
+  userInfoObj.country=resultSet.country;
+  userInfoObj.mobileno=resultSet.mobileno;
   userInfoObj.accountCreatedDate=new Date();
   userInfoObj.userType='user';
   userInfoObj.passwordChangeDates=[];
@@ -12,11 +16,13 @@ const insertUserInfoCollection=function(resultSet,dbInstance,collectionName,call
   checkUserExist(userInfoObj.userName,userInfoObj.emailId,dbInstance,collectionName,function(output){
     if(!output.status){
       callback(output);
+      return;
     }
     else{
       if(output.data==='userName already exists'){
         output.data='Duplicate';
         callback(output);
+        return;
       }
       else{
           dbInstance.collection(collectionName).insertOne(userInfoObj,function(err,res){
@@ -26,12 +32,14 @@ const insertUserInfoCollection=function(resultSet,dbInstance,collectionName,call
               jsonIntermediate.data='userInfoCollection err';
               jsonIntermediate.errorCode=6;
               callback(jsonIntermediate);
+              return;
             }
             else{
               let jsonIntermediate={};
               jsonIntermediate.status=true;
               jsonIntermediate.data='Success';
               callback(jsonIntermediate);
+              return;
             }
           });
       }
