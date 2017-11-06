@@ -8,24 +8,38 @@
 </head>
 <script>
 function login(){
-  var noVal=document.getElementById('login_id').value;
-  var json={};
-  json.value=noVal;
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-  if (this.readyState == 4 && this.status == 200) {
-    var resultSet=JSON.parse(this.responseText);
-    if(JSON.parse(resultSet.status)){
-      location.href='http://localhost:8080/chat';
-    }
-  }
+	  var username=document.getElementById('username_input').value;
+		var password=document.getElementById('password_input').value;
+		if(username==='' || password===''){
+			alert('Fields cant be empty');
+			return;
+		}
+		var json={};
+		json.username=username;
+		json.password=window.btoa(password);
+		json.functionIdentifier='login';
+	    var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+	  if (this.readyState == 4 && this.status == 200) {
+	    var resultSet=JSON.parse(this.responseText);
+	    if(JSON.parse(resultSet.status)){
+				console.log(resultSet);
+				if(resultSet.data==='Password Match'){
+					location.href='http://localhost:8080/chat';
+				}
+				else{
+					alert(resultSet.data);
+				}
+	    }
+			else{
+				alert(resultSet.data);
+			}
+	  }
 
-  };
-
-  //xhttp.open("POST","http://localhost:4000/empdetails", true);
-  xhttp.open("POST","http://localhost:8080/authenticate ", true);
-  xhttp.setRequestHeader("Content-type", "application/json");
-  xhttp.send(JSON.stringify(json));
+	  };
+	  xhttp.open("POST","http://localhost:8080/authenticate ", true);
+	  xhttp.setRequestHeader("Content-type", "application/json");
+	  xhttp.send(JSON.stringify(json));
   }
 
 </script>
@@ -42,7 +56,7 @@ function login(){
     	<span class="password_span">
 				Password
 			</span>
-			<input type='text' id="password_input">
+			<input type='password' id="password_input">
 			</input>
 		</div>
 		<div class="col-md-12 sign_up">

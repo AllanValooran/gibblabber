@@ -6,6 +6,7 @@ const bodyParser=require('body-parser');
 const cookieParser=require('cookie-parser');
 const createUser=require('./backend/createUser.js');
 const authenticateUser=require('./backend/authenticateUser.js');
+const gibber=require('./backend/scrambler/gibber.js');
 
 server.listen(8080, "127.0.0.1",()=>{
   console.log('listening 8080');
@@ -26,10 +27,24 @@ app.use(cookieParser());
 app.use(express.static(__dirname));
 
 app.get('/login',(req,res)=>{
+  let cookie = req.cookies.token;
+  if(cookie==undefined){
+
+  }
+  else{
+      res.clearCookie("token");
+  }
   res.sendFile(__dirname + '/login.html');
 });
 
 app.get('/signup',(req,res)=>{
+  let cookie = req.cookies.token;
+  if(cookie==undefined){
+
+  }
+  else{
+      res.clearCookie("token");
+  }
   res.sendFile(__dirname + '/signup.html');
 });
 
@@ -40,25 +55,14 @@ app.post('/createuser',(req,res)=>{
 });
 
 app.post('/authenticate',(req,res)=>{
-  // var cookie = req.cookies.token;
-  // var login=req.body.value;
-  //  if (cookie === undefined){
-  //   res.cookie('token',login, { maxAge: 900000, httpOnly: true });
-  //   console.log('cookie created successfully');
-  // }
-  // else{
-  //   // yes, cookie was already present
-  //   console.log('cookie exists', cookie);
-  // }
-  // var output={};
-  // output.status=true;
-  // res.send(JSON.stringify(output));
-  authenticateUser(req,function(responseData){
+
+  authenticateUser(req,res,function(responseData){
     res.send(responseData);
   });
 })
 
 app.get('/chat',(req,res)=>{
+  //console.log('MAC',gibber('dec',req.cookies.token));
   res.sendFile(__dirname + '/index.html');
 })
 

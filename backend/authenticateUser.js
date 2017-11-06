@@ -1,12 +1,14 @@
 const mongoConnection=require('./mongo/mongoConnector.js');
 const collectionExistCheck=require('./mongo/collectionExistCheck.js');
 const userInfoCollection=require('./mongo/userInfoCollection.js');
+const userCredentialsCollection=require('./mongo/userCredentialsCollection.js');
 const gibber=require('./scrambler/gibber.js');
 const hash=require('./scrambler/hash.js');
 
 
-const authenticateUser=function(req,callback){
+const authenticateUser=function(req,res,callback){
   let resultSet=Object.assign({},req.body);
+
   if(resultSet.username==='' || resultSet.password===''){
     let json={};
     json.status=false;
@@ -33,40 +35,38 @@ const authenticateUser=function(req,callback){
   	else{
       resultSet.password=hash('sha256',gibber('dec',req.body.password));
       resultSet.functionIdentifier=gibber('dec',req.body.functionIdentifier);
-      setUserInfo(resultSet,dbInstance,function(output){
+      checkUserCredentials(req,res,resultSet,dbInstance,function(output){
         if(!output.status){
           callback(output);
+          return;
         }
         else{
           //setUserCredentials
           callback(output);
+          return;
         }
       });
   	}
   });
 }
 
-const setUserInfo=function(resultSet,dbInstance,callback){
-    let collectionName='macin'
-    collectionExistCheck(dbInstance ,collectionName,true,function(output){
-    if(!output.status){
-      if(output.data.indexOf('err')==-1){
-      dbInstance.close();
-      }
-      let json={};
-      json.status=false;
-      json.data='Service Error';
-      json.errorCode=output.errorCode;
-      json.dataType='string';
-      callback(json);
-      return;
-    }
-    else{
-      userInfoCollection.insertUserInfoCollection(resultSet,dbInstance,collectionName,function(output1){
-        if(!output1.status){
-          if(output1.data.indexOf('err')==-1){
-          dbInstance.close();
-          }
+const checkUserCredentials=function(req,res,resultSet,dbInstance,callback){
+    let collectionName='macint';
+    collectionExistCheck(dbInstance,collectionName,false,function(output){
+      if(!output.status){
+        if(output.data.indexOf('err')==-1){
+        dbInstance.close();
+        }
+        if(output.errorCode===2){
+          let json={};
+          json.status=false;
+          json.data='Not a member. Please signup';
+          json.errorCode=output.errorCode;
+          json.dataType='string';
+          callback(json);
+          return;
+        }
+        else{
           let json={};
           json.status=false;
           json.data='Service Error';
@@ -75,20 +75,33 @@ const setUserInfo=function(resultSet,dbInstance,callback){
           callback(json);
           return;
         }
-        else{
-          dbInstance.close();
-          let json={};
-          json.status=output1.status;
-          json.data=output1.data;
-          json.dataType='string';
-          callback(json);
-          return;
-        }
-      });
-    }
+
+      }
+      else{
+        userCredentialsCollection.checkMatchUserCredentials(req,res,resultSet,dbInstance,collectionName,function(output1){
+          if(!output1.status){
+            if(output1.data.indexOf('err')==-1){
+            dbInstance.close();
+            }
+            let json={};
+            json.status=false;
+            json.data='Service Error';
+            json.errorCode=output.errorCode;
+            json.dataType='string';
+            callback(json);
+            return;
+          }
+          else{
+            dbInstance.close();
+            let json={};
+            json.status=output1.status;
+            json.data=output1.data;
+            json.dataType='string';
+            callback(json);
+            return;
+          }
+        });
+      }
   });
 }
-
-
-
 module.exports=authenticateUser;
