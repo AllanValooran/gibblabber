@@ -6,6 +6,7 @@ const bodyParser=require('body-parser');
 const cookieParser=require('cookie-parser');
 const createUser=require('./backend/createUser.js');
 const authenticateUser=require('./backend/authenticateUser.js');
+const createSocketSession=require('./backend/createSocketSession.js');
 const gibber=require('./backend/scrambler/gibber.js');
 
 server.listen(8080, "127.0.0.1",()=>{
@@ -62,26 +63,17 @@ app.post('/authenticate',(req,res)=>{
 })
 
 app.get('/chat',(req,res)=>{
-  //console.log('MAC',gibber('dec',req.cookies.token));
-  res.sendFile(__dirname + '/index.html');
-})
-
-const io = require('socket.io').listen(server);
-io.sockets.on('connection', function (socket){
-
-  socket.on('established', function (data) {
-		// we tell the client to execute 'updatechat' with 2 parameters
-		//io.sockets.in(socket.room).emit('updatechat', socket.username, data);
-    console.log('establishing socket in server');
-    socket.emit('updaterooms');
-	});
-
-  //socket.emit('updaterooms', rooms, newroom);
-
-// when the user disconnects.. perform this
-	socket.on('disconnect', function(){
-	//	io.sockets.emit('updateusers', usernames);
-		//socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
-	//	socket.leave(socket.room);
-	});
+  let cookie = req.cookies.token;
+  if(cookie==undefined){
+      res.redirect('/login');
+  }
+  else{
+      res.sendFile(__dirname + '/index.html');
+      createSocketSession(req,server,function(data){
+        if(data=='login'){
+          //res.redirect('/login');
+          console.log('login');
+        }
+      });
+   }
 });

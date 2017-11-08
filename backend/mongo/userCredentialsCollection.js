@@ -1,6 +1,7 @@
 //Model
 //{'uniqueId':'','userName':'','password':'','dummy':''}
 const gibber=require('../scrambler/gibber.js');
+const collectionIdentifier='macint';
 const insertUserCredentialsCollection=function(resultSet,dbInstance,collectionName,callback){
   let uniqueIdVal=3000;
   dbInstance.collection(collectionName).find().count(function(err,res){
@@ -134,6 +135,39 @@ const checkMatchUserCredentials=function(req,res,resultSet,dbInstance,collection
     }
   });
 }
+const checkCookieUserExist=function(uniqueId,dbInstance,callback){
+  let queryUniqueId={};
+  queryUniqueId.uniqueId=uniqueId;
+  dbInstance.collection(collectionIdentifier).find(queryUniqueId).toArray(function(err,result) {
+    if(err){
+      let jsonIntermediate={};
+      jsonIntermediate.status=false;
+      jsonIntermediate.data='userCredentialsCollection checkCookieUserExist err';
+      jsonIntermediate.errorCode=11;
+      callback(jsonIntermediate);
+      return;
+    }
+    else{
+      if(result.length==0){
+        let jsonIntermediate={};
+        jsonIntermediate.status=true;
+        jsonIntermediate.data='Failure';
+        callback(jsonIntermediate);
+        return;
+      }
+      else{
+        let jsonIntermediate={};
+        jsonIntermediate.status=true;
+        jsonIntermediate.data='Success';
+        jsonIntermediate.result=result[0].userName;
+        callback(jsonIntermediate);
+        return;
+      }
+    }
+  });
+}
+
 
 module.exports.insertUserCredentialsCollection=insertUserCredentialsCollection;
 module.exports.checkMatchUserCredentials=checkMatchUserCredentials;
+module.exports.checkCookieUserExist=checkCookieUserExist;

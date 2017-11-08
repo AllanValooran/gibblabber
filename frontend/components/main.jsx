@@ -1,10 +1,16 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import Header from './header.jsx';
+import ChatScreen from './chatScreen.jsx';
+import io from 'socket.io-client';
 
+const socket = io('http://localhost:8080');
 
 class Main extends React.Component{
   constructor(props){
     super(props);
+      socket.emit('status','active');
+
   }
   componentWillMount(){
     console.log('Main[will] hook called');
@@ -19,13 +25,15 @@ class Main extends React.Component{
   render(){
     return(
       <div>
-        {this.props.justReducer}
+        <Header socket={socket}/>
+        <ChatScreen socket={socket}/>
       </div>
     )
   }
 }
 
 const mapStateToProps = function(store) {
+  console.log('mapStateToProps',store);
   return {
     justReducer:store.justReducer,
   };

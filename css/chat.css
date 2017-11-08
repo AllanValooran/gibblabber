@@ -1,18 +1,13 @@
-
-.login{
-  margin: 20%;
-  margin-left: 35%;
+.header{
+  background-color: #ded8d8;
+  margin-right: -15px;
+  margin-left: -15px;
+  height: 34px;
+  margin-top:-8px;
 }
-.username, .password, .sign_up{
-  margin-bottom:2%;
-}
-.username_span , .password_span{
-  font-weight:bold;
-  margin-right:2%;
-}
-.login_button{
-  margin-left:10%;
-}
-.sign_up{
-  margin-left:2%;
+.search_People{
+  height: 32px;
+  border-radius: 9%;
+  margin-left: 5%;
+  width:40%;
 }

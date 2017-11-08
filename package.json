@@ -26,7 +26,8 @@
   },
   "scripts": {
     "dev": "webpack-dev-server --progress --colors",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "bb":"webpack -p && node servir.js"
   },
   "keywords": [],
   "author": "",
