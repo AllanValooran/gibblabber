@@ -1,6 +1,9 @@
 //Model
 //{"userName":"Allan","emailId":"allanmvalooran@gmail.com","gender":"male","accountCreatedDate":"2017-11-05T16:59:59.512Z","userType":"user","passwordChangeDates":[],"dummy":""}
-const insertUserInfoCollection=function(resultSet,dbInstance,collectionName,callback){
+const collectionExistCheck=require('./collectionExistCheck.js');
+
+const collectionName='macin';
+const insertUserInfoCollection=function(resultSet,dbInstance,callback){
   let userInfoObj={};
   userInfoObj.userName=resultSet.username;
   userInfoObj.firstName=resultSet.firstname;
@@ -12,8 +15,9 @@ const insertUserInfoCollection=function(resultSet,dbInstance,collectionName,call
   userInfoObj.accountCreatedDate=new Date();
   userInfoObj.userType='user';
   userInfoObj.passwordChangeDates=[];
+  userInfoObj.status='offline';
   userInfoObj.dummy='';
-  checkUserExist(userInfoObj.userName,userInfoObj.emailId,dbInstance,collectionName,function(output){
+  checkUserExist(userInfoObj.userName,userInfoObj.emailId,dbInstance,function(output){
     if(!output.status){
       callback(output);
       return;
@@ -47,7 +51,7 @@ const insertUserInfoCollection=function(resultSet,dbInstance,collectionName,call
   });
 }
 
-const checkUserExist=function(userName,email,dbInstance,collectionName,callback){
+const checkUserExist=function(userName,email,dbInstance,callback){
   let queryUserName={};
   queryUserName.userName=userName;
   let queryUserEmail={};
@@ -77,5 +81,31 @@ const checkUserExist=function(userName,email,dbInstance,collectionName,callback)
     }
   });
 }
+const updateStatus=function(userName,status,dbInstance,callback){
+    let queryUserName={};
+    queryUserName.userName=userName;
+    let setStatus={$set:{status:status}};
+    dbInstance.collection(collectionName).update(queryUserName,setStatus,function(err,result){
+      if(err){
+        let jsonIntermediate={};
+        jsonIntermediate.status=false;
+        jsonIntermediate.data='userInfoCollection updateStatus err';
+        jsonIntermediate.errorCode=5;
+        callback(jsonIntermediate);
+      }
+      else{
+          let jsonIntermediate={};
+          jsonIntermediate.status=true;
+          jsonIntermediate.data='Success';
+          callback(jsonIntermediate);
+      }
+    });
+  }
+
+const collectionExistCheckUserInfo=function(dbInstance,flag,callback){
+  collectionExistCheck(dbInstance,collectionName,flag,callback);
+}
 
 module.exports.insertUserInfoCollection=insertUserInfoCollection;
+module.exports.collectionExistCheck=collectionExistCheckUserInfo;
+module.exports.updateStatus=updateStatus;

@@ -2,6 +2,7 @@ const mongoConnection=require('./mongo/mongoConnector.js');
 const collectionExistCheck=require('./mongo/collectionExistCheck.js');
 const userInfoCollection=require('./mongo/userInfoCollection.js');
 const userCredentialsCollection=require('./mongo/userCredentialsCollection.js');
+const createDbInstance=require('./mongo/createDbInstance.js');
 const gibber=require('./scrambler/gibber.js');
 const hash=require('./scrambler/hash.js');
 
@@ -17,21 +18,17 @@ const createUser=function(req,callback){
     callback(json);
     return;
   }
-  const db_ipAddress="localhost";
-  const port_no=27017;
-  const db_name='test'
-  const dbConnectionUrl='mongodb://'+db_ipAddress+':'+port_no+'/'+db_name;
-  mongoConnection.createConnection(dbConnectionUrl,function(err,dbInstance){
-  	if(err){
-      let json={};
-      json.status=false;
-      json.data='Service Error';
-      json.errorCode=0;
-      json.dataType='string';
-      callback(json);
+  createDbInstance(function(output1){
+    if(!output1.status){
+      let jsonIntermediate={};
+      jsonIntermediate.status=false;
+      jsonIntermediate.data='createUser createDbInstance err';
+      jsonIntermediate.errorCode=13;
+      callback(jsonIntermediate);
       return;
-  	}
-  	else{
+    }
+    else{
+      let dbInstance=output1.data;
       resultSet.password=hash('sha256',gibber('dec',req.body.password));
       resultSet.functionIdentifier=gibber('dec',req.body.functionIdentifier);
       setUserInfo(resultSet,dbInstance,function(output){
@@ -46,8 +43,7 @@ const createUser=function(req,callback){
             return;
           }
           else{
-            console.log('entering user credentials')
-            setUserCredentials(resultSet,dbInstance,function(output1){
+              setUserCredentials(resultSet,dbInstance,function(output1){
                 callback(output1);
             })
           }
@@ -58,8 +54,7 @@ const createUser=function(req,callback){
 }
 
 const setUserInfo=function(resultSet,dbInstance,callback){
-    let collectionName='macin'
-    collectionExistCheck(dbInstance ,collectionName,true,function(output){
+    userInfoCollection.collectionExistCheck(dbInstance ,true,function(output){
     if(!output.status){
       if(output.data.indexOf('err')==-1){
       dbInstance.close();
@@ -73,7 +68,7 @@ const setUserInfo=function(resultSet,dbInstance,callback){
       return;
     }
     else{
-      userInfoCollection.insertUserInfoCollection(resultSet,dbInstance,collectionName,function(output1){
+      userInfoCollection.insertUserInfoCollection(resultSet,dbInstance,function(output1){
         if(!output1.status){
           if(output1.data.indexOf('err')==-1){
           dbInstance.close();
@@ -100,8 +95,7 @@ const setUserInfo=function(resultSet,dbInstance,callback){
 }
 
 const setUserCredentials=function(resultSet,dbInstance,callback){
-    let collectionName='macint';
-    collectionExistCheck(dbInstance,collectionName,true,function(output){
+    userCredentialsCollection.collectionExistCheck(dbInstance,true,function(output){
     if(!output.status){
       if(output.data.indexOf('err')==-1){
       dbInstance.close();
@@ -115,7 +109,7 @@ const setUserCredentials=function(resultSet,dbInstance,callback){
       return;
     }
     else{
-      userCredentialsCollection.insertUserCredentialsCollection(resultSet,dbInstance,collectionName,function(output1){
+      userCredentialsCollection.insertUserCredentialsCollection(resultSet,dbInstance,function(output1){
         if(!output1.status){
           if(output1.data.indexOf('err')==-1){
           dbInstance.close();

@@ -1,4 +1,4 @@
-  const createDbInstance=require('./mongo/createDbInstance.js');
+const createDbInstance=require('./mongo/createDbInstance.js');
 const userCredentialsCollection=require('./mongo/userCredentialsCollection.js');
 
 const cookieUserExist=function(cookieVal,callback){
@@ -27,6 +27,7 @@ const cookieUserExist=function(cookieVal,callback){
             jsonIntermediate.status=true;
             jsonIntermediate.data=data.data;
             jsonIntermediate.result=data.result;
+            jsonIntermediate.dbInstance=output.data;
             callback(jsonIntermediate);
             return;
           }

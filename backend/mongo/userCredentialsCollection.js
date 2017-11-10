@@ -1,8 +1,9 @@
 //Model
 //{'uniqueId':'','userName':'','password':'','dummy':''}
 const gibber=require('../scrambler/gibber.js');
-const collectionIdentifier='macint';
-const insertUserCredentialsCollection=function(resultSet,dbInstance,collectionName,callback){
+const collectionExistCheck=require('./collectionExistCheck.js');
+const collectionName='macint';
+const insertUserCredentialsCollection=function(resultSet,dbInstance,callback){
   let uniqueIdVal=3000;
   dbInstance.collection(collectionName).find().count(function(err,res){
     if(err){
@@ -20,7 +21,7 @@ const insertUserCredentialsCollection=function(resultSet,dbInstance,collectionNa
       userCredentialsObj.userName=resultSet.username;
       userCredentialsObj.password=resultSet.password;
       userCredentialsObj.dummy='';
-      checkUserExist(userCredentialsObj.userName,userCredentialsObj.uniqueId,dbInstance,collectionName,function(output){
+      checkUserExist(userCredentialsObj.userName,userCredentialsObj.uniqueId,dbInstance,function(output){
         if(!output.status){
           callback(output);
           return;
@@ -59,7 +60,7 @@ const insertUserCredentialsCollection=function(resultSet,dbInstance,collectionNa
 
 
 
-const checkUserExist=function(userName,uniqueId,dbInstance,collectionName,callback){
+const checkUserExist=function(userName,uniqueId,dbInstance,callback){
   let queryUserName={};
   queryUserName.userName=userName;
   let queryUniqueId={};
@@ -92,7 +93,7 @@ const checkUserExist=function(userName,uniqueId,dbInstance,collectionName,callba
   });
 }
 
-const checkMatchUserCredentials=function(req,res,resultSet,dbInstance,collectionName,callback){
+const checkMatchUserCredentials=function(req,res,resultSet,dbInstance,callback){
   let query={};
   query.userName=resultSet.username;
   dbInstance.collection(collectionName).find(query).toArray(function(err,result) {
@@ -138,7 +139,7 @@ const checkMatchUserCredentials=function(req,res,resultSet,dbInstance,collection
 const checkCookieUserExist=function(uniqueId,dbInstance,callback){
   let queryUniqueId={};
   queryUniqueId.uniqueId=uniqueId;
-  dbInstance.collection(collectionIdentifier).find(queryUniqueId).toArray(function(err,result) {
+  dbInstance.collection(collectionName).find(queryUniqueId).toArray(function(err,result) {
     if(err){
       let jsonIntermediate={};
       jsonIntermediate.status=false;
@@ -166,8 +167,11 @@ const checkCookieUserExist=function(uniqueId,dbInstance,callback){
     }
   });
 }
-
+const collectionExistCheckUserCredentials=function(dbInstance,flag,callback){
+  collectionExistCheck(dbInstance,collectionName,flag,callback);
+}
 
 module.exports.insertUserCredentialsCollection=insertUserCredentialsCollection;
 module.exports.checkMatchUserCredentials=checkMatchUserCredentials;
 module.exports.checkCookieUserExist=checkCookieUserExist;
+module.exports.collectionExistCheck=collectionExistCheckUserCredentials;

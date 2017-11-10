@@ -71,8 +71,8 @@ app.get('/chat',(req,res)=>{
       res.sendFile(__dirname + '/index.html');
       createSocketSession(req,server,function(data){
         if(data=='login'){
-          //res.redirect('/login');
-          console.log('login');
+          res.redirect('/login');
+          //console.log('login');
         }
       });
    }

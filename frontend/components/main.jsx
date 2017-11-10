@@ -10,7 +10,9 @@ class Main extends React.Component{
   constructor(props){
     super(props);
       socket.emit('status','active');
-
+      socket.on('errorOccured',function(data){
+        alert(data);
+      });
   }
   componentWillMount(){
     console.log('Main[will] hook called');
@@ -33,7 +35,6 @@ class Main extends React.Component{
 }
 
 const mapStateToProps = function(store) {
-  console.log('mapStateToProps',store);
   return {
     justReducer:store.justReducer,
   };

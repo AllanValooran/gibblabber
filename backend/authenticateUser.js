@@ -2,6 +2,7 @@ const mongoConnection=require('./mongo/mongoConnector.js');
 const collectionExistCheck=require('./mongo/collectionExistCheck.js');
 const userInfoCollection=require('./mongo/userInfoCollection.js');
 const userCredentialsCollection=require('./mongo/userCredentialsCollection.js');
+const createDbInstance=require('./mongo/createDbInstance.js');
 const gibber=require('./scrambler/gibber.js');
 const hash=require('./scrambler/hash.js');
 
@@ -18,21 +19,17 @@ const authenticateUser=function(req,res,callback){
     callback(json);
     return;
   }
-  const db_ipAddress="localhost";
-  const port_no=27017;
-  const db_name='test'
-  const dbConnectionUrl='mongodb://'+db_ipAddress+':'+port_no+'/'+db_name;
-  mongoConnection.createConnection(dbConnectionUrl,function(err,dbInstance){
-  	if(err){
-      let json={};
-      json.status=false;
-      json.data='Service Error';
-      json.errorCode=9;
-      json.dataType='string';
-      callback(json);
+  createDbInstance(function(output1){
+    if(!output1.status){
+      let jsonIntermediate={};
+      jsonIntermediate.status=false;
+      jsonIntermediate.data='authenticateUser createDbInstance err';
+      jsonIntermediate.errorCode=13;
+      callback(jsonIntermediate);
       return;
-  	}
-  	else{
+    }
+    else{
+      let dbInstance=output1.data;
       resultSet.password=hash('sha256',gibber('dec',req.body.password));
       resultSet.functionIdentifier=gibber('dec',req.body.functionIdentifier);
       checkUserCredentials(req,res,resultSet,dbInstance,function(output){
@@ -51,8 +48,7 @@ const authenticateUser=function(req,res,callback){
 }
 
 const checkUserCredentials=function(req,res,resultSet,dbInstance,callback){
-    let collectionName='macint';
-    collectionExistCheck(dbInstance,collectionName,false,function(output){
+    userInfoCollection.collectionExistCheck(dbInstance,false,function(output){
       if(!output.status){
         if(output.data.indexOf('err')==-1){
         dbInstance.close();
@@ -78,7 +74,7 @@ const checkUserCredentials=function(req,res,resultSet,dbInstance,callback){
 
       }
       else{
-        userCredentialsCollection.checkMatchUserCredentials(req,res,resultSet,dbInstance,collectionName,function(output1){
+        userCredentialsCollection.checkMatchUserCredentials(req,res,resultSet,dbInstance,function(output1){
           if(!output1.status){
             if(output1.data.indexOf('err')==-1){
             dbInstance.close();
