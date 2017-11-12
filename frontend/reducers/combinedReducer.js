@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
-import justReducer from './justReducer.js';
+import searchResultsReducer from './searchResultsReducer.js';
 import searchKey from './searchKey.js';
 import loginStatus from './loginStatus.js';
 
 // Combine Reducers
 var reduceComb = combineReducers({
-  justReducer:justReducer,
+  searchResults:searchResultsReducer,
   searchKey:searchKey,
   loginStatus:loginStatus
 });

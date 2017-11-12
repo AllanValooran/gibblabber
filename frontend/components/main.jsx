@@ -11,7 +11,7 @@ class Main extends React.Component{
     super(props);
       socket.emit('status','active');
       socket.on('errorOccured',function(data){
-        alert(data);
+        //alert(data);
       });
   }
   componentWillMount(){
@@ -19,7 +19,6 @@ class Main extends React.Component{
   }
   componentDidMount(){
     console.log('Main[did] hook called');
-    this.props.callMe('just');
   }
   componentWillReceiveProps(){
     console.log('Main[willReceive] hook called');
@@ -34,18 +33,5 @@ class Main extends React.Component{
   }
 }
 
-const mapStateToProps = function(store) {
-  return {
-    justReducer:store.justReducer,
-  };
-};
 
-const mapDispatchToProps = dispatch => {
-  return {
-    callMe : (type) => dispatch({
-    type
-	  })
-  }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(Main);
+export default Main;

@@ -101,6 +101,27 @@ const updateStatus=function(userName,status,dbInstance,callback){
       }
     });
   }
+const searchUsers=function(searchKeyWord,dbInstance,callback){
+  let regExpression='/^'+searchKeyWord+'/i';
+  let queryUserName={};
+  queryUserName.userName={$regex:eval(regExpression)};
+  dbInstance.collection(collectionName).find(queryUserName,{'_id':false,'userName':true,'emailId':true,'firstName':true,'lastName':true},{limit:100}).toArray(function(err,result){
+    if(err){
+      let jsonIntermediate={};
+      jsonIntermediate.status=false;
+      jsonIntermediate.data='userInfoCollection searchUsers err';
+      jsonIntermediate.errorCode=13;
+      callback(jsonIntermediate);
+    }
+    else{
+        let jsonIntermediate={};
+        jsonIntermediate.status=true;
+        jsonIntermediate.data='Success';
+        jsonIntermediate.result=result;
+        callback(jsonIntermediate);
+    }
+  });
+}
 
 const collectionExistCheckUserInfo=function(dbInstance,flag,callback){
   collectionExistCheck(dbInstance,collectionName,flag,callback);
@@ -109,3 +130,4 @@ const collectionExistCheckUserInfo=function(dbInstance,flag,callback){
 module.exports.insertUserInfoCollection=insertUserInfoCollection;
 module.exports.collectionExistCheck=collectionExistCheckUserInfo;
 module.exports.updateStatus=updateStatus;
+module.exports.searchUsers=searchUsers;

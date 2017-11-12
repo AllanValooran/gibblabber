@@ -27,6 +27,17 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(__dirname));
 
+app.get('/',(req,res)=>{
+  console.log('hello');
+  let cookie = req.cookies.token;
+  if(cookie==undefined){
+    res.redirect('/login');
+  }
+  else{
+    res.redirect('/chat');
+  }
+
+});
 app.get('/login',(req,res)=>{
   let cookie = req.cookies.token;
   if(cookie==undefined){
@@ -68,10 +79,10 @@ app.get('/chat',(req,res)=>{
       res.redirect('/login');
   }
   else{
-      res.sendFile(__dirname + '/index.html');
+      res.sendFile(__dirname + '/chat.html');
       createSocketSession(req,server,function(data){
         if(data=='login'){
-          res.redirect('/login');
+            res.redirect('/login');
           //console.log('login');
         }
       });
