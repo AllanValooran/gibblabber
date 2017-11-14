@@ -4,7 +4,9 @@ import {connect} from 'react-redux';
 class Header extends React.Component{
   constructor(props){
     super(props);
-
+	this.state={
+		chatRecipientObj:{}
+	}
   }
   componentWillMount(){
     console.log('Header[will] is mounting');
@@ -16,7 +18,12 @@ class Header extends React.Component{
     })
     this.props.socket.on('searchResults',(data)=>{
       this.props.updateSearchResults(JSON.parse(data),'updateSearchResults');
+    });
+	this.props.socket.on('roomChatRecord',(data)=>{
+	   let dataObj=JSON.parse(data);
+	   this.props.updatechatRoomsReceipient(dataObj.receipientObj,'update_chatRoomsReceipientReducer');
     })
+
   }
   componentWillReceiveProps(nextProps){
     console.log('Header[willReceive] is mounting');
@@ -34,9 +41,19 @@ class Header extends React.Component{
     }
   }
   enableSingleChat(obj){
-	this.props.handleSearchKey(obj.userName,'update');
-	this.props.updateSearchResults([],'updateSearchResults');
-	this.props.socket.emit('initiateSingleChatSession',obj.userName);
+    let count=0;
+    for(var ind=0;ind<this.props.chatRoomsReceipient.length;ind++){
+      if(obj.userName==this.props.chatRoomsReceipient[ind].userName){
+        count++;
+         this.props.updatechatRoomsReceipient(ind,'highlight_Chat');
+         break;
+      }
+    }
+    if(count==0){
+      this.props.handleSearchKey(obj.userName,'update');
+    	this.props.updateSearchResults([],'updateSearchResults');
+    	this.props.socket.emit('initiateSingleChatSession',obj);
+    }
   }
   enableGroupChat(obj){
 	this.props.handleSearchKey('','update');
@@ -62,6 +79,7 @@ class Header extends React.Component{
           return(
             <div>
               <span className="searchUsername">{obj.userName}</span>
+			  <span className="searchStatus">{obj.status}</span>
 			  <span className="searchResultSingleChat" onClick={this.enableSingleChat.bind(this,obj)}><img src='images/single_chat.png' className="singleChatImg" alt="single chat"/></span>
 			  <span className="searchResultMultiChat"onClick={this.enableGroupChat.bind(this,obj)}><img src='images/group_chat.png' className="groupChatImg" alt="group chat" /></span>
             </div>
@@ -84,7 +102,8 @@ const mapStateToProps = function(store) {
   return {
     searchKey:store.searchKey,
     loginStatus:store.loginStatus,
-    searchResults:store.searchResults
+    searchResults:store.searchResults,
+	chatRoomsReceipient:store.chatRoomsReceipient
   };
 };
 
@@ -99,6 +118,10 @@ const mapDispatchToProps = dispatch => {
       type
     }),
     updateSearchResults:(val,type)=>dispatch({
+      val,
+      type
+    }),
+	updatechatRoomsReceipient:(val,type)=>dispatch({
       val,
       type
     })

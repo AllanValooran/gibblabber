@@ -34,8 +34,8 @@ class Main extends React.Component{
     return(
       <div>
         <Header socket={socket}/>
-        <ChatScreen socket={socket}/>
-		     <Modal />
+		<ChatScreen socket={socket}/>
+		 <Modal />
 	  </div>
     )
   }
@@ -43,7 +43,7 @@ class Main extends React.Component{
 const mapStateToProps = function(store) {
   return {
     modalObj:store.modalObj,
-  };
+};
 };
 
 const mapDispatchToProps = dispatch => {

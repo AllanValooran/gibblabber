@@ -71,13 +71,19 @@ const createSocketSession=function(req,server,callback){
         else{
           let dbInstance=output.dbInstance;
           let username=output.result;
-          initiateChat.initiateSingleChat(val,data,dbInstance,function(dataOutput){
+          initiateChat.initiateSingleChat(val,data.userName,dbInstance,function(dataOutput){
             if(!dataOutput.status){
 			  socket.emit('errorOccured',dataOutput.data);
             }
             else{
               if(dataOutput.data=='Success'){
-                socket.emit('roomChatRecord',JSON.stringify(dataOutput.result));
+				console.log(dataOutput);
+				data.roomName=dataOutput.roomName;
+				let resultSet={};
+				resultSet.pastChat=dataOutput.pastChat;
+				resultSet.receipientObj=data;
+				console.log('roomChatRecord',JSON.stringify(resultSet));
+                socket.emit('roomChatRecord',JSON.stringify(resultSet));
               }
               else{
                 socket.emit('errorOccured','status updation failed');

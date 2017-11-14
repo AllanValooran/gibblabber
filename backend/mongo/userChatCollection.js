@@ -24,7 +24,7 @@ const insertUserChatCollection=function(roomName,dbInstance,callback){
 		  let jsonIntermediate={};
 		  jsonIntermediate.status=true;
 		  jsonIntermediate.data='Success';
-			jsonIntermediate.result=[];
+		  jsonIntermediate.result=[];
 		  callback(jsonIntermediate);
 		  return;
 		}

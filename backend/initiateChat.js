@@ -58,7 +58,8 @@ const initiateSingleChat=function(chatInitiator,chatNonInitiator,dbInstance,call
 					  json.status=output1.status;
 					  json.data=output1.data;
 					  json.dataType='string';
-            json.result=output1.result;
+					  json.roomName=roomName;
+					  json.pastChat=output1.result;
 					  callback(json);
 					  return;
 					}

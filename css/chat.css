@@ -1,3 +1,6 @@
+html{
+	overflow:hidden;
+}
 .header{
   background-color: #ecdce6;
   margin-right: -15px;
@@ -68,10 +71,15 @@
 	height: 25px;
 }
 .searchUsername{
-	padding-right:60%;
+	padding-right:50%;
 	padding-left:5%;
 	position: relative;
     bottom: 8px;
+}
+.searchStatus{
+	position: relative;
+    bottom: 8px;
+    padding-right: 10%;
 }
 .searchResultSingleChat,.searchResultMultiChat:hover{
 	cursor:pointer;
@@ -84,4 +92,65 @@
 }
 .modal-container .modal, .modal-container .modal-backdrop {
   position: absolute;
+}
+.chat_box{
+	float: right;
+  width: 24%;
+  height: 40%;
+	margin-right:4px;
+}
+.chat_header{
+	border-bottom: 1px solid #bfadad;
+    border-radius: 4%;
+    background: #b17d9d;
+    height: 30px;
+}
+.chat_header_userName{
+	color: white;
+	float: left;
+	font-size: 17px;
+	padding-left: 10px;
+	padding-top: 4px;
+	margin-right: 50%;
+}
+.chat_header_status{
+	float: left;
+	padding-top: 6px;
+	font-style: italic;
+	color: white;
+}
+.chat_header_img{
+	float: right;
+  position: relative;
+  top: 6px;
+  right: 7px;
+}
+.chat_header_img,.chat_header_userName:hover{
+	cursor:pointer;
+}
+
+.closeButton{
+	height:20px;
+}
+.chat_body{
+	border-bottom: 1px solid #e4dede;
+  border-right: 1px solid #e4dede;
+  border-left: 1px solid #e4dede;
+  height: 196px;
+    overflow-y: scroll;
+}
+.chat_main{
+	position: absolute;
+    right: 2%;
+    top: 60%;
+    width: 100%;
+}
+.highlight{
+	background: #7d3361;
+	font:white
+}
+.chat_body_user_input input{
+	height: 34px;
+	width: 100%;
+	border: 1px solid #e4dede;
 }

@@ -105,7 +105,7 @@ const searchUsers=function(searchKeyWord,dbInstance,callback){
   let regExpression='/^'+searchKeyWord+'/i';
   let queryUserName={};
   queryUserName.userName={$regex:eval(regExpression)};
-  dbInstance.collection(collectionName).find(queryUserName,{'_id':false,'userName':true,'emailId':true,'firstName':true,'lastName':true},{limit:100}).toArray(function(err,result){
+  dbInstance.collection(collectionName).find(queryUserName,{'_id':false,'userName':true,'emailId':true,'firstName':true,'lastName':true,'status':true},{limit:100}).toArray(function(err,result){
     if(err){
       let jsonIntermediate={};
       jsonIntermediate.status=false;
