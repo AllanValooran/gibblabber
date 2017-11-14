@@ -1,0 +1,48 @@
+html{
+	overflow:hidden;
+}
+.login{
+  margin: 10%;
+  margin-left: 35%;
+  margin-top: 5%;
+}
+.username, .firstname, .lastname, .email, .gender ,.password, .mobileno, .country, .cfmpassword{
+  margin-bottom:2%;
+}
+.username_span , .firstname_span, .lastname_span, .email_span, .gender_span , .mobileno_span, .country_span, .password_span , .cfmpassword_span{
+  font-weight:bold;
+  margin-right:2%;
+}
+.login_button{
+  margin-left:10%;
+}
+.username_span{
+  margin-right:5%;
+}
+.email_span{
+  margin-right:75px;
+}
+.firstname_span{
+  margin-right:57px;
+}
+.lastname_span{
+  margin-right:57px;
+}
+.mobileno_span{
+  margin-right:57px;
+}
+.gender_span{
+  margin-right:80px;
+}
+.country_span{
+  margin-right:57px;
+}
+.password_span{
+  margin-right:63px;
+}
+.cfmpassword_span{
+  margin-right:6px;
+}
+#gender,#country{
+  width:14%
+}

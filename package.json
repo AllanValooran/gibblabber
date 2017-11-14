@@ -9,6 +9,7 @@
     "express": "^4.16.2",
     "mongodb": "^2.2.33",
     "react": "^16.0.0",
+    "react-bootstrap": "^0.31.5",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
@@ -27,7 +28,7 @@
   "scripts": {
     "dev": "webpack-dev-server --progress --colors",
     "build": "webpack -p",
-    "bb":"webpack -p && node servir.js"
+    "bb": "webpack -p && node servir.js"
   },
   "keywords": [],
   "author": "",

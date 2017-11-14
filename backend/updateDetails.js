@@ -45,4 +45,34 @@ const cookieUserExist=function(cookieVal,callback){
   });
 
 }
+const userNameExist=function(user,dbInstance,callback){
+	userCredentialsCollection.checkUserNameExist(user,dbInstance,function(data){
+        if(!data.status){
+		  let jsonIntermediate={};
+          jsonIntermediate.status=false;
+          jsonIntermediate.data=data.data;
+          jsonIntermediate.errorCode=data.errorCode;
+          callback(jsonIntermediate);
+          return;
+        }
+        else{
+		  if(data.data==='Success'){
+            let jsonIntermediate={};
+            jsonIntermediate.status=true;
+            jsonIntermediate.data=data.data;
+            jsonIntermediate.result=data.result[0].uniqueId;
+            callback(jsonIntermediate);
+            return;
+          }
+          else{
+            let jsonIntermediate={};
+            jsonIntermediate.status=false;
+            jsonIntermediate.data=data.data;
+            callback(jsonIntermediate);
+            return;
+          }
+        }
+      })
+}
 module.exports.cookieUserExist=cookieUserExist;
+module.exports.userNameExist=userNameExist;

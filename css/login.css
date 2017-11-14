@@ -1,4 +1,6 @@
-
+html{
+	overflow:hidden;
+}
 .login{
   margin: 20%;
   margin-left: 35%;

@@ -9,6 +9,9 @@ class ChatScreen extends React.Component{
   }
   componentDidMount(){
     console.log('ChatScreen[did] is mounting');
+    this.props.socket.on('roomChatRecord',(data)=>{
+      console.log('roomChatRecord',data);
+    })
   }
   componentWillReceiveProps(){
     console.log('ChatScreen[willReceive] is mounting');

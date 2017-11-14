@@ -1,7 +1,10 @@
-
+html{
+	overflow:hidden;
+}
 .login{
   margin: 10%;
   margin-left: 35%;
+  margin-top: 5%;
 }
 .username, .firstname, .lastname, .email, .gender ,.password, .mobileno, .country, .cfmpassword{
   margin-bottom:2%;

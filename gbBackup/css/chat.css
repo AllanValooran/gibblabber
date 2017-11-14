@@ -1,0 +1,78 @@
+.header{
+  background-color: #ecdce6;
+  margin-right: -15px;
+  margin-left: -15px;
+  height: 34px;
+  margin-top:-8px;
+}
+.logo{
+  float:left;
+  padding-left:15px;
+  padding-top:8px;
+  margin-right: 10px;
+  color:gray;
+}
+.search_People{
+  float:left;
+  height: 32px;
+  border-radius: 9%;
+  width:40%;
+  background:#dccbcb;
+}
+.status{
+  padding-left:15px;
+  padding-top:5px;
+  color:gray;
+  float:left;
+}
+.logout{
+  background:
+}
+.searchImg{
+  height:20px;
+  margin-left: -30px;
+  padding-top: 5px;
+  float:left;
+}
+.searchImg:hover{
+  cursor:pointer;
+}
+.logoutImg{
+  height: 31px;
+  float: right;
+  margin-right: 18px;
+}
+.logoutImg:hover{
+  cursor:pointer;
+}
+.searchResults{
+  position: absolute;
+  /*left: 56px;   */
+  left: 3%;
+  top: 35px;
+  width: 40%;
+}
+.searchResults>div{
+  border: 1px solid #b1afaf;
+  border-top: 0px;
+  padding: 4px 10px 4px 10px;  
+  background: #dccbcb;
+  color: #484646;
+}
+
+.singleChatImg{
+	height: 25px;
+	padding-right:5%;
+}
+.groupChatImg{
+	height: 25px;
+}
+.searchUsername{
+	padding-right:60%;
+	padding-left:5%;
+	position: relative;
+    bottom: 8px;
+}
+.searchResultSingleChat,.searchResultMultiChat:hover{
+	cursor:pointer;
+}

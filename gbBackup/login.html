@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Gibblabber Authentication</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/login.css">
+</head>
+<script>
+function login(){
+	  var username=document.getElementById('username_input').value;
+		var password=document.getElementById('password_input').value;
+		if(username==='' || password===''){
+			alert('Fields cant be empty');
+			return;
+		}
+		var json={};
+		json.username=username;
+		json.password=window.btoa(password);
+		json.functionIdentifier='login';
+	    var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+	  if (this.readyState == 4 && this.status == 200) {
+	    var resultSet=JSON.parse(this.responseText);
+	    if(JSON.parse(resultSet.status)){
+				console.log(resultSet);
+				if(resultSet.data==='Password Match'){
+					location.href='http://localhost:8080/chat';
+				}
+				else{
+					alert(resultSet.data);
+				}
+	    }
+			else{
+				alert(resultSet.data);
+			}
+	  }
+
+	  };
+	  xhttp.open("POST","http://localhost:8080/authenticate ", true);
+	  xhttp.setRequestHeader("Content-type", "application/json");
+	  xhttp.send(JSON.stringify(json));
+  }
+
+</script>
+<body>
+  <div class="col-md-12 login">
+		<div class="col-md-12 username">
+    	<span class="username_span">
+				Username
+			</span>
+			<input type='text' id="username_input">
+			</input>
+		</div>
+		<div class="col-md-12 password">
+    	<span class="password_span">
+				Password
+			</span>
+			<input type='password' id="password_input">
+			</input>
+		</div>
+		<div class="col-md-12 sign_up">
+			<a href="/signup">New to gibblabber ? Click to Signup</a>
+		</div>
+		<div class="col-md-12 login_button">
+			<button type="button" onclick="login()">LOGIN</button>
+		</div>
+  </div>
+</body>
+</html>

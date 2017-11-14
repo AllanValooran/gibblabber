@@ -12,7 +12,7 @@ class Header extends React.Component{
   componentDidMount(){
     console.log('Header[did] is mounting');
     this.props.socket.on('statusChanged',(status)=>{
-      this.props.handleLoginStatus(status,'updateLoginStatus')
+		this.props.handleLoginStatus(status,'updateLoginStatus')
     })
     this.props.socket.on('searchResults',(data)=>{
       this.props.updateSearchResults(JSON.parse(data),'updateSearchResults');
@@ -33,15 +33,20 @@ class Header extends React.Component{
       this.searchGibberMates();
     }
   }
-  selectGibberMate(obj){
-    this.props.handleSearchKey(obj.userName,'update');
-    this.props.updateSearchResults([],'updateSearchResults');
-    console.log(obj);
+  enableSingleChat(obj){
+	this.props.handleSearchKey(obj.userName,'update');
+	this.props.updateSearchResults([],'updateSearchResults');
+	this.props.socket.emit('initiateSingleChatSession',obj.userName);
+  }
+  enableGroupChat(obj){
+	this.props.handleSearchKey('','update');
+	this.props.updateSearchResults([],'updateSearchResults');
   }
   handleLogout(){
     window.location.href='http://localhost:8080/login';
   }
   render(){
+    console.log('searchResults',this.props.searchResults);
     return(
       <div className='col-md-12 header'>
         <div className="col-md-1"></div>
@@ -55,8 +60,10 @@ class Header extends React.Component{
         <div className="searchResults" ref="searchResults">
         {this.props.searchResults.map((obj,ind)=>{
           return(
-            <div onClick={this.selectGibberMate.bind(this,obj)}>
-              {obj.userName}
+            <div>
+              <span className="searchUsername">{obj.userName}</span>
+			  <span className="searchResultSingleChat" onClick={this.enableSingleChat.bind(this,obj)}><img src='images/single_chat.png' className="singleChatImg" alt="single chat"/></span>
+			  <span className="searchResultMultiChat"onClick={this.enableGroupChat.bind(this,obj)}><img src='images/group_chat.png' className="groupChatImg" alt="group chat" /></span>
             </div>
           )
         })}

@@ -47,20 +47,41 @@
 }
 .searchResults{
   position: absolute;
-  left: 56px;
+  /*left: 56px;   */
+  left: 3%;
   top: 35px;
   width: 40%;
 }
 .searchResults>div{
   border: 1px solid #b1afaf;
   border-top: 0px;
-  padding: 10px;
+  padding: 4px 10px 4px 10px;
   background: #dccbcb;
   color: #484646;
 }
-.searchResults>div:hover{
-  cursor:pointer;
+
+.singleChatImg{
+	height: 25px;
+	padding-right:5%;
 }
-.searchResults>div:focus{
-  background:black;
+.groupChatImg{
+	height: 25px;
+}
+.searchUsername{
+	padding-right:60%;
+	padding-left:5%;
+	position: relative;
+    bottom: 8px;
+}
+.searchResultSingleChat,.searchResultMultiChat:hover{
+	cursor:pointer;
+}
+.disp_none{
+  display:none;
+}
+.modal-container {
+  position: relative;
+}
+.modal-container .modal, .modal-container .modal-backdrop {
+  position: absolute;
 }

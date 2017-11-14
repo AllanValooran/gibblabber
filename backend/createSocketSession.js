@@ -1,4 +1,5 @@
 const updateDetails=require('./updateDetails.js');
+const initiateChat=require('./initiateChat.js');
 const userInfoCollection=require('./mongo/userInfoCollection.js');
 const userCredentialsCollection=require('./mongo/userCredentialsCollection.js');
 const gibber=require('./scrambler/gibber.js');
@@ -50,6 +51,33 @@ const createSocketSession=function(req,server,callback){
             else{
               if(dataOutput.data=='Success'){
                 socket.emit('searchResults',JSON.stringify(dataOutput.result));
+              }
+              else{
+                socket.emit('errorOccured','status updation failed');
+              }
+            }
+          });
+
+        }
+      })
+    })
+
+	socket.on('initiateSingleChatSession',function(data){
+      let val=Number(gibber('dec',req.cookies.token));
+      updateDetails.cookieUserExist(val,function(output){
+        if(!output.status){
+          callback('login');
+        }
+        else{
+          let dbInstance=output.dbInstance;
+          let username=output.result;
+          initiateChat.initiateSingleChat(val,data,dbInstance,function(dataOutput){
+            if(!dataOutput.status){
+			  socket.emit('errorOccured',dataOutput.data);
+            }
+            else{
+              if(dataOutput.data=='Success'){
+                socket.emit('roomChatRecord',JSON.stringify(dataOutput.result));
               }
               else{
                 socket.emit('errorOccured','status updation failed');

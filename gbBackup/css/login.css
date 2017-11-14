@@ -1,0 +1,20 @@
+html{
+	overflow:hidden;
+}
+.login{
+  margin: 20%;
+  margin-left: 35%;
+}
+.username, .password, .sign_up{
+  margin-bottom:2%;
+}
+.username_span , .password_span{
+  font-weight:bold;
+  margin-right:2%;
+}
+.login_button{
+  margin-left:10%;
+}
+.sign_up{
+  margin-left:2%;
+}

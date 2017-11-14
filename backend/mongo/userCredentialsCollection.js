@@ -167,6 +167,37 @@ const checkCookieUserExist=function(uniqueId,dbInstance,callback){
     }
   });
 }
+const checkUserNameExist=function(userName,dbInstance,callback){
+  let queryUserName={};
+  queryUserName.userName=userName;
+  dbInstance.collection(collectionName).find(queryUserName).toArray(function(err,result) {
+    if(err){
+      let jsonIntermediate={};
+      jsonIntermediate.status=false;
+      jsonIntermediate.data='userCredentialsCollection checkUserNameExist err';
+      jsonIntermediate.errorCode=15;
+      callback(jsonIntermediate);
+      return;
+    }
+    else{
+      if(result.length==0){
+        let jsonIntermediate={};
+        jsonIntermediate.status=true;
+        jsonIntermediate.data='Failure';
+        callback(jsonIntermediate);
+        return;
+      }
+      else{
+        let jsonIntermediate={};
+        jsonIntermediate.status=true;
+        jsonIntermediate.data='Success';
+        jsonIntermediate.result=result;
+        callback(jsonIntermediate);
+        return;
+      }
+    }
+  });
+}
 const collectionExistCheckUserCredentials=function(dbInstance,flag,callback){
   collectionExistCheck(dbInstance,collectionName,flag,callback);
 }
@@ -175,3 +206,4 @@ module.exports.insertUserCredentialsCollection=insertUserCredentialsCollection;
 module.exports.checkMatchUserCredentials=checkMatchUserCredentials;
 module.exports.checkCookieUserExist=checkCookieUserExist;
 module.exports.collectionExistCheck=collectionExistCheckUserCredentials;
+module.exports.checkUserNameExist=checkUserNameExist;
