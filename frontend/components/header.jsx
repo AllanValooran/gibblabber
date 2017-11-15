@@ -19,9 +19,9 @@ class Header extends React.Component{
     this.props.socket.on('searchResults',(data)=>{
       this.props.updateSearchResults(JSON.parse(data),'updateSearchResults');
     });
-	this.props.socket.on('roomChatRecord',(data)=>{
+	   this.props.socket.on('roomChatRecord',(data)=>{
 	   let dataObj=JSON.parse(data);
-	   this.props.updatechatRoomsReceipient(dataObj.receipientObj,'update_chatRoomsReceipientReducer');
+     this.props.updatechatRoomsReceipient(dataObj.receipientObj,'update_chatRoomsReceipientReducer');
     })
 
   }

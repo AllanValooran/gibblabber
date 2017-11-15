@@ -5,6 +5,8 @@ const userCredentialsCollection=require('./mongo/userCredentialsCollection.js');
 const gibber=require('./scrambler/gibber.js');
 
 const createSocketSession=function(req,server,callback){
+  let users={};
+  let rooms=[];
   const io = require('socket.io').listen(server);
   io.sockets.on('connection',function(socket){
     socket.on('status',function(data){
@@ -77,12 +79,15 @@ const createSocketSession=function(req,server,callback){
             }
             else{
               if(dataOutput.data=='Success'){
-				console.log(dataOutput);
-				data.roomName=dataOutput.roomName;
-				let resultSet={};
-				resultSet.pastChat=dataOutput.pastChat;
-				resultSet.receipientObj=data;
-				console.log('roomChatRecord',JSON.stringify(resultSet));
+        				data.roomName=dataOutput.roomName;
+        				let resultSet={};
+        				resultSet.pastChat=dataOutput.pastChat;
+        				resultSet.receipientObj=data;
+                users[data.roomName]=users[data.roomName]||[];
+                socket.leave(socket.room);
+                socket.room=data.roomName;
+                socket.join(data.roomName);
+                console.log('initiateChat',socket.room);
                 socket.emit('roomChatRecord',JSON.stringify(resultSet));
               }
               else{
@@ -94,6 +99,19 @@ const createSocketSession=function(req,server,callback){
         }
       })
     })
+
+    socket.on('sendChat',function(data){
+        let val=Number(gibber('dec',req.cookies.token));
+        updateDetails.cookieUserExist(val,function(output){
+          if(!output.status){
+            callback('login');
+          }
+          else{
+            console.log('sendChat',data.roomName);
+            io.sockets.in(data.roomName).emit('sendingChat',data);
+          }
+        })
+      })
 
     // when the user disconnects.. perform this
     socket.on('disconnect', function(){
