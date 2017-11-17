@@ -189,3 +189,6 @@ html{
 		width:80%;
 		word-wrap: break-word;
 }
+.disable_scroll{
+	overflow-y:hidden;
+}

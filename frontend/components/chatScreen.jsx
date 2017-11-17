@@ -10,10 +10,23 @@ class ChatScreen extends React.Component{
   }
   componentDidMount(){
     console.log('ChatScreen[did] is mounting');
-    this.props.socket.on('sendingChat',(data)=>{
-
-		this.props.updatechatRoomsReceipient(data,'update_MsgReceipientReducer');
+    this.props.socket.on('receiver_action',(data)=>{
+      let dataObj=JSON.parse(data);
+      for(var ind=0;ind<this.props.chatRoomsReceipient.length;ind++){
+        if(dataObj.roomName==this.props.chatRoomsReceipient[ind].roomName){
+            let json={};
+            json.ind=ind;
+            json.typingMsg=typingMsg;
+            this.props.updatechatRoomsReceipient(json,'updateReceiverAction');
+          break;
+        }
+      }
     })
+    this.props.socket.on('sendingChat',(data)=>{
+		    this.props.updatechatRoomsReceipient(data,'update_MsgReceipientReducer');
+    });
+
+
   }
   componentWillReceiveProps(nextProps){
     console.log('ChatScreen[willReceive] is mounting');
@@ -31,17 +44,7 @@ class ChatScreen extends React.Component{
   }
   sendChat(index,e){
     if(e.keyCode==13){
-      /* var msgToSend=this.state.msgToSend;
-      var toBeSend=msgToSend[index];
-      let data={};
-      data.roomName=this.props.chatRoomsReceipient[index].roomName;
-      data.msg=toBeSend;
-      this.props.socket.emit('sendChat',data);
-      msgToSend[index]='';
-      this.setState({
-        msgToSend:msgToSend
-      }); */
-	  var msg={};
+    var msg={};
 	  msg.sender=this.props.loginDetails.userName;
 	  msg.receiver=[];
 	  if(this.props.chatRoomsReceipient[index].type=='Single'){
@@ -70,6 +73,11 @@ class ChatScreen extends React.Component{
 	 val.msgToSend=this.refs['send'+index].value;
 	 val.index=index;
 	 this.props.updatechatRoomsReceipient(val,'change_msgToSend');
+   let jsonData={};
+   jsonData.msg=msg;
+   jsonData.roomName=this.props.chatRoomsReceipient[index].receiver[0].roomName;
+   jsonData.userName=this.props.loginDetails.userName;
+   this.props.socket.emit('typing',jsonData);
   }
   render(){
 	console.log('this.props.chatRoomsReceipient',this.props.chatRoomsReceipient);
@@ -90,7 +98,7 @@ class ChatScreen extends React.Component{
 				<img src='images/closeButton.png' className="closeButton" alt="close chat" onClick={this.handleCloseChat.bind(this,chatInd)}/>
 			 </span>
 			</div>
-			<div className="chat_body">
+			<div className={chatRecipient.highlight?"chat_body":"chat_body disable_scroll"}>
 				{chatRecipient.msg.map((chat,chatInd)=>{
 					if(chat.sender==this.props.loginDetails.userName){
 						return(
@@ -109,6 +117,9 @@ class ChatScreen extends React.Component{
 				})
 				}
 			</div>
+      <div className='receiver_action'>
+        {chatRecipient.typingMsg}
+      </div>
       <div className="chat_body_user_input">
       <span className='chat_body_user_input_txt'>
       <input type='text' placeHolder='Type here' ref={"send"+chatInd} value={chatRecipient.msgToSend} onChange={this.handleMsgToSend.bind(this,chatInd)} onKeyDown={this.sendChat.bind(this,chatInd)}></input>

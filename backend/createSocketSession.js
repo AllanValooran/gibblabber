@@ -150,6 +150,23 @@ const createSocketSession=function(req,server,callback){
 		  }
         })
       })
+    socket.on('typing',function(data){
+      if(typeof socket.room !=='undefined'){
+        if(socket.room!=data.roomName){
+          socket.leave(socket.room);
+          socket.room=data.roomName;
+          socket.join(data.roomName);
+        }
+      }
+      else{
+        socket.room=data.roomName;
+        socket.join(data.roomName);
+      }
+      let json={};
+      json.typingMsg=data.userName+' is typing ....';
+      json.roomName=data.roomName;
+      socket.broadcast.emit('receiver_action',json);
+    })
     socket.on('closeChat',function(data){
       if(typeof socket.room !=='undefined'){
         if(socket.room!=data.roomName){

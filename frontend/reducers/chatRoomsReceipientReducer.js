@@ -7,6 +7,7 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
       if(state.length<4){
         action.val.highlight=true;
 		    action.val.msgToSend='';
+        action.val.typingMsg='';
 		  let oldAlteredState=state.filter((obj,ind)=>{
           let val=obj;
           val.highlight=false;
@@ -18,7 +19,7 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
   		else{
          action.val.highlight=true;
 	       action.val.msgToSend='';
-
+         action.val.typingMsg='';
          let popedState=state.filter((item,i) => {
   				return i<3
   		 });
@@ -77,6 +78,16 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
       }
       return item;
     })
+   case 'updateReceiverAction':
+   return state.filter((item,i)=>{
+     if(action.val.ind==i && item.highlight){
+       item.typingMsg=action.val.msg;
+    }
+     else{
+       item.typingMsg='';
+     }
+     return item;
+   })
     default:
 		return state;
 	}
