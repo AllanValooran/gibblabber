@@ -117,7 +117,7 @@ const checkMatchUserCredentials=function(req,res,resultSet,dbInstance,callback){
         if(resultSet.password===result[0].password){
           let cookie = req.cookies.token;
           let gibbToken=gibber('enc',''+result[0].uniqueId);
-          res.cookie('token',gibbToken, { maxAge: 900000, httpOnly: true });
+		  res.cookie('token',gibbToken, { maxAge: 900000, httpOnly: true });
           let jsonIntermediate={};
           jsonIntermediate.status=true;
           jsonIntermediate.data='Password Match';

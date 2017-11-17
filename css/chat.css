@@ -116,6 +116,7 @@ html{
 .chat_header_status{
 	float: left;
 	padding-top: 6px;
+	padding-right: 6px;
 	font-style: italic;
 	color: white;
 }
@@ -153,4 +154,38 @@ html{
 	height: 34px;
 	width: 100%;
 	border: 1px solid #e4dede;
+}
+.login_chat{
+	float: right;
+    margin-left: 50%;
+    background: #ece3e9;
+    margin-bottom: 9px;
+    border-radius: 5%;
+    color: #5f5353;
+    font-size: 16px;
+    padding-bottom: 5px;
+    padding-top: 6px;
+    margin-right: 5px;
+    padding-left: 10px;
+    padding-right: 17px;
+		width: 80%;
+		word-wrap: break-word;
+	}
+
+
+.other_chat{
+	float: left;
+    margin-right: 50%;
+    background: #dab0cc;
+    margin-bottom: 9px;
+    border-radius: 5%;
+    color: #5f5353;
+    font-size: 16px;
+    padding-bottom: 5px;
+    padding-top: 6px;
+    /* margin-right: 5px; */
+    padding-left: 10px;
+    padding-right: 17px;
+		width:80%;
+		word-wrap: break-word;
 }

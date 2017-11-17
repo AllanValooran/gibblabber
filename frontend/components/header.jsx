@@ -7,21 +7,44 @@ class Header extends React.Component{
 	this.state={
 		chatRecipientObj:{}
 	}
+	this.props.socket.emit('typeHere','HEADER');
   }
   componentWillMount(){
     console.log('Header[will] is mounting');
   }
   componentDidMount(){
     console.log('Header[did] is mounting');
-    this.props.socket.on('statusChanged',(status)=>{
-		this.props.handleLoginStatus(status,'updateLoginStatus')
-    })
+    this.props.socket.on('stateAndLoginUserName',(data)=>{
+		this.props.handleLoginDetails(data,'updateLoginStatusUserName');
+	})
     this.props.socket.on('searchResults',(data)=>{
       this.props.updateSearchResults(JSON.parse(data),'updateSearchResults');
     });
-	   this.props.socket.on('roomChatRecord',(data)=>{
-	   let dataObj=JSON.parse(data);
-     this.props.updatechatRoomsReceipient(dataObj.receipientObj,'update_chatRoomsReceipientReducer');
+	this.props.socket.on('roomChatRecordSingle',(data)=>{
+    console.log('rooMEND',data);
+    let count=0;
+    let dataObj=JSON.parse(data);
+    for(var ind=0;ind<this.props.chatRoomsReceipient.length;ind++){
+      if(dataObj.roomName==this.props.chatRoomsReceipient[ind].roomName){
+        count++;
+        let json={};
+        json.ind=ind;
+        json.msg=dataObj.pastChat;
+        console.log('updateMSG CALLING');
+        this.props.updatechatRoomsReceipient(json,'updateMsgOnly');
+        break;
+      }
+    }
+    if(count==0){
+
+	   let json={};
+	   json.receiver=[];
+	   json.receiver.push(dataObj.receipientObj);
+	   json.type='Single';
+	   json.msg=dataObj.pastChat;
+	   json.roomName=dataObj.roomName;
+	   this.props.updatechatRoomsReceipient(json,'update_chatRoomsReceipientReducer');
+   }
     })
 
   }
@@ -41,19 +64,9 @@ class Header extends React.Component{
     }
   }
   enableSingleChat(obj){
-    let count=0;
-    for(var ind=0;ind<this.props.chatRoomsReceipient.length;ind++){
-      if(obj.userName==this.props.chatRoomsReceipient[ind].userName){
-        count++;
-         this.props.updatechatRoomsReceipient(ind,'highlight_Chat');
-         break;
-      }
-    }
-    if(count==0){
-      this.props.handleSearchKey(obj.userName,'update');
+		  this.props.handleSearchKey(obj.userName,'update');
     	this.props.updateSearchResults([],'updateSearchResults');
     	this.props.socket.emit('initiateSingleChatSession',obj);
-    }
   }
   enableGroupChat(obj){
 	this.props.handleSearchKey('','update');
@@ -63,7 +76,7 @@ class Header extends React.Component{
     window.location.href='http://localhost:8080/login';
   }
   render(){
-    console.log('searchResults',this.props.searchResults);
+    console.log('userLogged',this.props.loginDetails.userName);
     return(
       <div className='col-md-12 header'>
         <div className="col-md-1"></div>
@@ -87,7 +100,7 @@ class Header extends React.Component{
         })}
         </div>
         </div>
-        <div className="col-md-3 status">{this.props.loginStatus}</div>
+        <div className="col-md-3 status">{this.props.loginDetails.status}</div>
         <div className="col-md-1 ">
         <span className="logout">
         <img src='images/logout.jpg' className="logoutImg" alt="logout" onClick={this.handleLogout.bind(this)}/>
@@ -101,7 +114,7 @@ class Header extends React.Component{
 const mapStateToProps = function(store) {
   return {
     searchKey:store.searchKey,
-    loginStatus:store.loginStatus,
+    loginDetails:store.loginDetails,
     searchResults:store.searchResults,
 	chatRoomsReceipient:store.chatRoomsReceipient
   };
@@ -113,7 +126,7 @@ const mapDispatchToProps = dispatch => {
     val,
     type
   }),
-    handleLoginStatus:(val,type)=>dispatch({
+    handleLoginDetails:(val,type)=>dispatch({
       val,
       type
     }),

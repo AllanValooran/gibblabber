@@ -97,6 +97,7 @@ const updateStatus=function(userName,status,dbInstance,callback){
           let jsonIntermediate={};
           jsonIntermediate.status=true;
           jsonIntermediate.data='Success';
+		  jsonIntermediate.result=result;
           callback(jsonIntermediate);
       }
     });

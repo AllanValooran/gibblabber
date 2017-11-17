@@ -84,10 +84,51 @@ const chatRoomExistCheck=function(roomName,dbInstance,flag,callback){
     }
   });
 }
-const collectionExistCheckUserCredentials=function(dbInstance,flag,callback){
+
+const insertMsg=function(roomName,msg,dbInstance,callback){
+	collectionExistCheckUserChat(dbInstance,true,function(output){
+		if(!output.status){
+		  if(output.data.indexOf('err')==-1){
+		  dbInstance.close();
+		  }
+		  let json={};
+		  json.status=false;
+		  json.data='Service Error';
+		  json.errorCode=output.errorCode;
+		  json.dataType='string';
+		  callback(json);
+		  return;
+		}
+		else{
+		  let queryRoomName={};
+		  queryRoomName.roomName=roomName;
+		  dbInstance.collection(collectionName).update(queryRoomName,{$push:{"chat":msg}},function(err,result){
+			  if(err){
+				  let json={};
+				  json.status=false;
+				  json.data='Service Error';
+				  json.errorCode=16;
+				  json.dataType='string';
+				  callback(json);
+				  return;
+			  }
+			  else{
+				  let json={};
+				  json.status=true;
+				  json.data='Success';
+				  json.dataType='string';
+				  callback(json);
+				  return;
+			  }
+		  })
+		}
+	})
+}
+const collectionExistCheckUserChat=function(dbInstance,flag,callback){
   collectionExistCheck(dbInstance,collectionName,flag,callback);
 }
 
 
-module.exports.collectionExistCheck=collectionExistCheckUserCredentials;
+module.exports.collectionExistCheck=collectionExistCheckUserChat;
 module.exports.chatRoomExistCheck=chatRoomExistCheck;
+module.exports.insertMsg=insertMsg;

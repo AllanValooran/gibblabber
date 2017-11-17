@@ -5,13 +5,13 @@ import ChatScreen from './chatScreen.jsx';
 import Modal from './modal.jsx';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:8080');
+const socket = io('http://localhost:8080',{transports: ['websocket']});
 
 class Main extends React.Component{
   constructor(props){
     super(props);
       socket.emit('status','active');
-      socket.on('errorOccured',(data)=>{
+	  socket.on('errorOccured',(data)=>{
         let modalObjVal={};
         modalObjVal.flagType='error';
         modalObjVal.show=true;
