@@ -12,12 +12,12 @@ class ChatScreen extends React.Component{
   componentDidMount(){
     console.log('ChatScreen[did] is mounting');
     this.props.socket.on('receiver_action',(data)=>{
-      let dataObj=JSON.parse(data);
+      let dataObj=data;
       for(var ind=0;ind<this.props.chatRoomsReceipient.length;ind++){
         if(dataObj.roomName==this.props.chatRoomsReceipient[ind].roomName){
             let json={};
             json.ind=ind;
-            json.typingMsg=typingMsg;
+            json.typingMsg=dataObj.typingMsg;
             this.props.updatechatRoomsReceipient(json,'updateReceiverAction');
           break;
         }
@@ -87,7 +87,7 @@ class ChatScreen extends React.Component{
 	 val.index=index;
 	 this.props.updatechatRoomsReceipient(val,'change_msgToSend');
    let jsonData={};
-   jsonData.msg=msg;
+   jsonData.msg=this.refs['send'+index].value;
    jsonData.roomName=this.props.chatRoomsReceipient[index].receiver[0].roomName;
    jsonData.userName=this.props.loginDetails.userName;
    this.props.socket.emit('typing',jsonData);
@@ -95,7 +95,7 @@ class ChatScreen extends React.Component{
   monitorScroll(index){
     let objDiv=ReactDOM.findDOMNode(this.refs['chat_body'+index]);
     if(objDiv.scrollTop==objDiv.scrollHeight){
-        console.log('intimate the server that all messages are read by this guy');  
+        console.log('intimate the server that all messages are read by this guy');
     }
   }
   render(){
@@ -135,10 +135,14 @@ class ChatScreen extends React.Component{
 					}
 				})
 				}
+        {chatRecipient.highlight?
+          <div className='receiver_action'>
+            {chatRecipient.typingMsg}
+          </div>
+        :
+         null
+       }
 			</div>
-      <div className='receiver_action'>
-        {chatRecipient.typingMsg}
-      </div>
       <div className="chat_body_user_input">
       <span className='chat_body_user_input_txt'>
       <input type='text' placeHolder='Type here' ref={"send"+chatInd} value={chatRecipient.msgToSend} onChange={this.handleMsgToSend.bind(this,chatInd)} onKeyDown={this.sendChat.bind(this,chatInd)}></input>

@@ -89,7 +89,7 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
    case 'updateReceiverAction':
    return state.filter((item,i)=>{
      if(action.val.ind==i && item.highlight){
-       item.typingMsg=action.val.msg;
+       item.typingMsg=action.val.typingMsg;
        item.currentAction='updateReceiverAction';
     }
      else{

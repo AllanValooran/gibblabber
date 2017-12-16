@@ -192,3 +192,11 @@ html{
 .disable_scroll{
 	overflow-y:hidden;
 }
+.receiver_action{
+	color: gray;
+	font-style: italic;
+	font-size: 12px;
+	padding-left: 8px;
+	position: absolute;
+	bottom: 39px;
+}

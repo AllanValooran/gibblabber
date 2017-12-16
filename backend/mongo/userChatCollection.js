@@ -86,6 +86,7 @@ const chatRoomExistCheck=function(roomName,dbInstance,flag,callback){
 }
 
 const insertMsg=function(roomName,msg,dbInstance,callback){
+	console.log('NEW msg',msg);
 	collectionExistCheckUserChat(dbInstance,true,function(output){
 		if(!output.status){
 		  if(output.data.indexOf('err')==-1){

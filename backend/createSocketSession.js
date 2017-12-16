@@ -4,6 +4,7 @@ const userInfoCollection=require('./mongo/userInfoCollection.js');
 const userCredentialsCollection=require('./mongo/userCredentialsCollection.js');
 const userChatCollection=require('./mongo/userChatCollection.js');
 const gibber=require('./scrambler/gibber.js');
+const cognitive=require('./cognitive.js');
 
 const createSocketSession=function(req,server,callback){
   let users={};
@@ -119,7 +120,8 @@ const createSocketSession=function(req,server,callback){
     })
 
     socket.on('sendChat',function(data){
-		let realCookie=socket.request.headers.cookie.split('=')[1].trim();
+        console.log('send')
+        let realCookie=socket.request.headers.cookie.split('=')[1].trim();
         let val=parseInt(gibber('dec',realCookie));
         updateDetails.cookieUserExist(val,function(output){
           if(!output.status){
@@ -162,10 +164,9 @@ const createSocketSession=function(req,server,callback){
         socket.room=data.roomName;
         socket.join(data.roomName);
       }
-      let json={};
-      json.typingMsg=data.userName+' is typing ....';
-      json.roomName=data.roomName;
-      socket.broadcast.emit('receiver_action',json);
+      cognitive.typing(data,function(json){
+          socket.broadcast.emit('receiver_action',json);
+      });
     })
     socket.on('closeChat',function(data){
       if(typeof socket.room !=='undefined'){
