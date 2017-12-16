@@ -8,11 +8,12 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
         action.val.highlight=true;
 		    action.val.msgToSend='';
         action.val.typingMsg='';
-		  let oldAlteredState=state.filter((obj,ind)=>{
+        action.val.currentAction='chatInitiation';
+	      let oldAlteredState=state.filter((obj,ind)=>{
           let val=obj;
           val.highlight=false;
 		      val.msgToSend='';
-		  return val;
+	        return val;
         })
         return oldAlteredState.concat(action.val);
   		}
@@ -20,6 +21,7 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
          action.val.highlight=true;
 	       action.val.msgToSend='';
          action.val.typingMsg='';
+         action.val.currentAction='chatInitiation';
          let popedState=state.filter((item,i) => {
   				return i<3
   		 });
@@ -30,11 +32,13 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
         if(ind==action.val){
           let val=obj;
           val.highlight=true;
+          val.currentAction='chatHighLight';
           return val;
         }
         else{
           let val=obj;
           val.highlight=false;
+          val.currentAction='chatHighLight';
           return val;
         }
       })
@@ -43,6 +47,7 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
       let popedState=state.filter((item,i) => {
         if(i!=action.val){
            item.highlight=false;
+           item.currentAction='chatPopUp';
            return item;
         }
       });
@@ -51,26 +56,29 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
         popedState[popedState.length-1].highlight=true;
       }
       return popedState;
-	 case 'change_msgToSend':
+	  case 'change_msgToSend':
 		return state.filter((item,i)=>{
 					if(action.val.index==i){
 						item.msgToSend=action.val.msgToSend;
+            item.currentAction='chatMsgToSend';
 					}
 					return item;
 				});
-	case 'update_MsgReceipientReducer':
+	  case 'update_MsgReceipientReducer':
 		 return state.filter((item,i)=>{
 			if(action.val.roomName==item.roomName){
 				item.msg.push(action.val.msg);
+        item.currentAction='updateChat'
 				item.msgToSend='';
 			}
 			return item
 		});
-  case 'updateMsgOnly':
+    case 'updateMsgOnly':
     console.log('reducer updateMsgOnly');
     return state.filter((item,i)=>{
       if(action.val.ind==i){
         item.msg=action.val.msg;
+        item.currentAction='updateMsg'
         item.highlight=true;
       }
       else{
@@ -82,9 +90,11 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
    return state.filter((item,i)=>{
      if(action.val.ind==i && item.highlight){
        item.typingMsg=action.val.msg;
+       item.currentAction='updateReceiverAction';
     }
      else{
        item.typingMsg='';
+       item.currentAction='updateReceiverAction';
      }
      return item;
    })

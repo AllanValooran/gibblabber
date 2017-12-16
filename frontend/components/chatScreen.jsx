@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 
 class ChatScreen extends React.Component{
@@ -31,6 +32,18 @@ class ChatScreen extends React.Component{
   componentWillReceiveProps(nextProps){
     console.log('ChatScreen[willReceive] is mounting');
 
+  }
+  componentDidUpdate(prevProps,prevState){
+    if(this.props.chatRoomsReceipient.length!=0){
+      for(let i=0;i<this.props.chatRoomsReceipient.length;i++){
+        if(this.props.chatRoomsReceipient[i].highlight && this.props.chatRoomsReceipient[i].currentAction!=='updateChat'){
+          let objDiv=ReactDOM.findDOMNode(this.refs['chat_body'+i]);
+          objDiv.scrollTop = objDiv.scrollHeight;
+          break;
+        }
+      }
+
+    }
   }
   handleCloseChat(index){
     this.props.socket.emit('closeChat',this.props.chatRoomsReceipient[index]);
@@ -79,12 +92,18 @@ class ChatScreen extends React.Component{
    jsonData.userName=this.props.loginDetails.userName;
    this.props.socket.emit('typing',jsonData);
   }
+  monitorScroll(index){
+    let objDiv=ReactDOM.findDOMNode(this.refs['chat_body'+index]);
+    if(objDiv.scrollTop==objDiv.scrollHeight){
+        console.log('intimate the server that all messages are read by this guy');
+    }
+  }
   render(){
 	console.log('this.props.chatRoomsReceipient',this.props.chatRoomsReceipient);
 	return(
 	<div class="col-md-12 chat_main">
     {this.props.chatRoomsReceipient.map((chatRecipient,chatInd)=>{
-		return(
+      return(
 			<div className="chat_box">
 			<div className={chatRecipient.highlight?"chat_header highlight":"chat_header"}>
 			 <span className="chat_header_userName" onClick={this.highlightChat.bind(this,chatInd)}>
@@ -98,7 +117,7 @@ class ChatScreen extends React.Component{
 				<img src='images/closeButton.png' className="closeButton" alt="close chat" onClick={this.handleCloseChat.bind(this,chatInd)}/>
 			 </span>
 			</div>
-			<div className={chatRecipient.highlight?"chat_body":"chat_body disable_scroll"}>
+			<div  ref={"chat_body"+chatInd} className={chatRecipient.highlight?"chat_body":"chat_body disable_scroll"} onScroll={this.monitorScroll.bind(this,chatInd)}>
 				{chatRecipient.msg.map((chat,chatInd)=>{
 					if(chat.sender==this.props.loginDetails.userName){
 						return(
