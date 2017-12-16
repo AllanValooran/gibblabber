@@ -95,7 +95,7 @@ class ChatScreen extends React.Component{
   monitorScroll(index){
     let objDiv=ReactDOM.findDOMNode(this.refs['chat_body'+index]);
     if(objDiv.scrollTop==objDiv.scrollHeight){
-        console.log('intimate the server that all messages are read by this guy');
+        console.log('intimate the server that all messages are read by this guy');  
     }
   }
   render(){

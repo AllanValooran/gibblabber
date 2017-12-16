@@ -1,5 +1,5 @@
 html{
-	overflow:hidden;
+	overflow-x:hidden;
 }
 .header{
   background-color: #ecdce6;
@@ -138,7 +138,7 @@ html{
   border-right: 1px solid #e4dede;
   border-left: 1px solid #e4dede;
   height: 196px;
-    overflow-y: scroll;
+  overflow-y: scroll;
 }
 .chat_main{
 	position: absolute;
