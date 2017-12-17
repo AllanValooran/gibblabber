@@ -98,6 +98,9 @@ class ChatScreen extends React.Component{
         console.log('intimate the server that all messages are read by this guy');
     }
   }
+  handleGameChatToggle(index){
+    this.props.updatechatRoomsReceipient(index,'gameChatToggle');
+  }
   render(){
 	console.log('this.props.chatRoomsReceipient',this.props.chatRoomsReceipient);
 	return(
@@ -109,6 +112,13 @@ class ChatScreen extends React.Component{
 			 <span className="chat_header_userName" onClick={this.highlightChat.bind(this,chatInd)}>
 				{chatRecipient.receiver[0].userName}
 			 </span>
+       <span className='chat_game'>
+       {chatRecipient.gameChat=='chat'?
+        <img src='images/chat.png' className="chatIcon" alt="chat_switch" onClick={this.handleGameChatToggle.bind(this,chatInd)}/>
+       :
+        <img src='images/game.png' className="gameIcon" alt="game_switch" onClick={this.handleGameChatToggle.bind(this,chatInd)}/>
+      }
+       </span>
 			 <span className="chat_header_status">
 				{chatRecipient.receiver[0].status}
 			 </span>

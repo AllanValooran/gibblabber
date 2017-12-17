@@ -9,7 +9,8 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
 		    action.val.msgToSend='';
         action.val.typingMsg='';
         action.val.currentAction='chatInitiation';
-	      let oldAlteredState=state.filter((obj,ind)=>{
+        action.val.gameChat='chat';
+        let oldAlteredState=state.filter((obj,ind)=>{
           let val=obj;
           val.highlight=false;
 		      val.msgToSend='';
@@ -22,6 +23,7 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
 	       action.val.msgToSend='';
          action.val.typingMsg='';
          action.val.currentAction='chatInitiation';
+         action.val.gameChat='chat';
          let popedState=state.filter((item,i) => {
   				return i<3
   		 });
@@ -98,6 +100,19 @@ const chatRoomsReceipientReducer=function(state=initialState,action){
      }
      return item;
    })
+   case 'gameChatToggle':
+     return state.filter((item,i)=>{
+       if(action.val.ind==i && item.highlight){
+          if(action.val.gameChat=='chat'){
+            item.gameChat='game';
+          }
+          else{
+            item.gameChat='chat';
+          }
+      }
+
+       return item;
+     })
     default:
 		return state;
 	}

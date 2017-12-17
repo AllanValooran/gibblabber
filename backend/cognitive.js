@@ -4,7 +4,8 @@ const typing=function(data,callback){
   if(data.msg!==''){
     typingMsgTemplate+=data.userName;
     for(let i=0;i<typeKeyMatching.length;i++){
-      if(data.msg.toLowerCase().includes(typeKeyMatching[i].key)){
+      //if(data.msg.toLowerCase().includes(typeKeyMatching[i].key)){
+      if(data.msg.match(new RegExp(typeKeyMatching[i].key,'gi'))){
          typingMsgTemplate+=typeKeyMatching[i].typingKey;
          break;
       }
@@ -20,10 +21,10 @@ const typing=function(data,callback){
 }
 
 let typeKeyMatching=[
-{'key':'love','typingKey':'is going to express his affection'},
-{'key':'apologize','typingKey':'is trying his best to apologize'},
+{'key':'love|like|pyar|kadal','typingKey':'is going to express his affection'},
+{'key':'sorry|apologize','typingKey':'is trying his best to apologize'},
 {'key':'hate','typingKey':'is going to express his hatred'},
-{'key':'meet','typingKey':'is going to propose a meetup'}
+{'key':'meet|coffee|data|dinner|lunch','typingKey':'is going to propose a meetup'}
 ]
 
 module.exports.typing=typing;

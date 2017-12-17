@@ -126,11 +126,11 @@ html{
   top: 6px;
   right: 7px;
 }
-.chat_header_img,.chat_header_userName:hover{
+.chat_header_img,.chat_header_userName,.chat_gb_bulb:hover{
 	cursor:pointer;
 }
 
-.closeButton{
+.closeButton,.bulbIcon{
 	height:20px;
 }
 .chat_body{
@@ -154,6 +154,10 @@ html{
 	height: 34px;
 	width: 100%;
 	border: 1px solid #e4dede;
+}
+.chat_gb_bulb{
+	position: relative;
+	top: 4px
 }
 .login_chat{
 	float: right;
@@ -198,5 +202,5 @@ html{
 	font-size: 12px;
 	padding-left: 8px;
 	position: absolute;
-	bottom: 39px;
+	bottom: 32px;
 }
